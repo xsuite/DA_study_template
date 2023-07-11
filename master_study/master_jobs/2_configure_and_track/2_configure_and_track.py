@@ -12,7 +12,6 @@ import logging
 import numpy as np
 import pandas as pd
 import os
-from scipy.optimize import minimize_scalar
 import xtrack as xt
 import tree_maker
 import xmask as xm
@@ -184,6 +183,7 @@ def do_levelling(config_collider, config_bb, n_collisions_ip8, collider, n_colli
             cross_section,
             crab=False,
         )
+        initial_I = config_bb["num_particles_per_bunch"]
         config_bb["num_particles_per_bunch"] = I
 
     # Then level luminosity in IP 2/8 changing the separation
@@ -199,7 +199,24 @@ def do_levelling(config_collider, config_bb, n_collisions_ip8, collider, n_colli
         config_beambeam=config_bb,
         additional_targets_lumi=additional_targets_lumi,
     )
-    return collider
+
+    # Update configuration
+    config_bb["num_particles_per_bunch_after_optimization"] = I
+    config_bb["num_particles_per_bunch"] = initial_I
+    config_collider["config_lumi_leveling"]["ip2"]["final_on_sep2h"] = collider.vars[
+        "on_sep2h"
+    ]._value
+    config_collider["config_lumi_leveling"]["ip2"]["final_on_sep2v"] = collider.vars[
+        "on_sep2v"
+    ]._value
+    config_collider["config_lumi_leveling"]["ip8"]["final_on_sep8h"] = collider.vars[
+        "on_sep8h"
+    ]._value
+    config_collider["config_lumi_leveling"]["ip8"]["final_on_sep8v"] = collider.vars[
+        "on_sep8v"
+    ]._value
+
+    return collider, config_collider
 
 
 # ==================================================================================================
@@ -309,6 +326,7 @@ def configure_collider(
     config_collider,
     skip_beam_beam=False,
     save_collider=False,
+    save_config=False,
     return_collider_before_bb=False,
 ):
     # Generate configuration files for orbit correction
@@ -332,14 +350,20 @@ def configure_collider(
     )
 
     # Compute the number of collisions in the different IPs
-    n_collisions_ip1_and_5, n_collisions_ip2, n_collisions_ip8 = compute_collision_from_scheme(
-        config_bb
-    )
+    (
+        n_collisions_ip1_and_5,
+        n_collisions_ip2,
+        n_collisions_ip8,
+    ) = compute_collision_from_scheme(config_bb)
 
     # Do the leveling if requested
     if "config_lumi_leveling" in config_collider and not config_collider["skip_leveling"]:
-        collider = do_levelling(
-            config_collider, config_bb, n_collisions_ip8, collider, n_collisions_ip1_and_5
+        collider, config_collider = do_levelling(
+            config_collider,
+            config_bb,
+            n_collisions_ip8,
+            collider,
+            n_collisions_ip1_and_5,
         )
     else:
         print(
@@ -369,7 +393,25 @@ def configure_collider(
 
     if save_collider:
         # Save the final collider before tracking
-        collider.to_json("final_collider.json")
+        print('Saving "collider.json')
+        if save_config:
+            collider_dict = collider.to_dict()
+            collider_dict["config_yaml"] = config_collider
+
+            class NpEncoder(json.JSONEncoder):
+                def default(self, obj):
+                    if isinstance(obj, np.integer):
+                        return int(obj)
+                    if isinstance(obj, np.floating):
+                        return float(obj)
+                    if isinstance(obj, np.ndarray):
+                        return obj.tolist()
+                    return super(NpEncoder, self).default(obj)
+
+            with open("collider.json", "w") as fid:
+                json.dump(collider_dict, fid, cls=NpEncoder)
+        else:
+            collider.to_json("collider.json")
 
     if return_collider_before_bb:
         return collider, config_bb, collider_before_bb
@@ -439,7 +481,12 @@ def configure_and_track(config_path="config.yaml"):
     tree_maker_tagging(config, tag="started")
 
     # Configure collider (not saved, since it may trigger overload of afs)
-    collider, config_bb = configure_collider(config_sim, config_collider, save_collider=False)
+    collider, config_bb = configure_collider(
+        config_sim,
+        config_collider,
+        save_collider=config["dump_collider"],
+        save_config=config["dump_config_in_collider"],
+    )
 
     # Prepare particle distribution
     particles = prepare_particle_distribution(config_sim, collider, config_bb)

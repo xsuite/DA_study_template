@@ -59,8 +59,8 @@ config_collider:
       lhcb1: 5.0
       lhcb2: 5.0
     dqy:
-      lhcb1: 5.0
-      lhcb2: 5.0
+      lhcb1: 15.0
+      lhcb2: 15.0
     
     # Linear coupling
     delta_cmr: 0.001
@@ -183,7 +183,7 @@ config_collider:
 config_simulation:
 
   # Collider file
-  collider_file :    '../1_build_distr_and_collider/collider/collider.json'
+  collider_file :    '../collider/collider.json'
 
   # Distribution in the normalized xy space
   particle_file:  '../particles/000.parquet'
@@ -196,6 +196,10 @@ config_simulation:
 
   # Beam to track
   beam: 'lhcb1' #lhcb1 or lhcb2
+
+# Save collider or not
+dump_collider: false
+dump_config_in_collider: false
 
 # Log
 log_file: 'tree_maker.log'
