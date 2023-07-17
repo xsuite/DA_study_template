@@ -28,12 +28,61 @@ def build_sequence(
       """)
 
     mad.input("""
+              
       ! Slice nominal sequence
+      myslice: macro = {
+      if (MBX.4L2->l>0) {
+        select, flag=makethin, clear;
+        select, flag=makethin, class=mb, slice=2;
+        select, flag=makethin, class=mq, slice=2;
+        select, flag=makethin, class=mqxa,  slice=16;  !old triplet
+        select, flag=makethin, class=mqxb,  slice=16;  !old triplet
+        select, flag=makethin, class=mqxc,  slice=16;  !new mqxa (q1,q3)
+        select, flag=makethin, class=mqxd,  slice=16;  !new mqxb (q2a,q2b)
+        select, flag=makethin, class=mqxfa, slice=16;  !new (q1,q3 v1.1)
+        select, flag=makethin, class=mqxfb, slice=16;  !new (q2a,q2b v1.1)
+        select, flag=makethin, class=mbxa,  slice=4;   !new d1
+        select, flag=makethin, class=mbxf,  slice=4;   !new d1 (v1.1)
+        select, flag=makethin, class=mbrd,  slice=4;   !new d2 (if needed)
+        select, flag=makethin, class=mqyy,  slice=4;   !new q4
+        select, flag=makethin, class=mqyl,  slice=4;   !new q5
+        select, flag=makethin, class=mbh,   slice=4;   !11T dipoles
+        select, flag=makethin, pattern=mbx\.,    slice=4;
+        select, flag=makethin, pattern=mbrb\.,   slice=4;
+        select, flag=makethin, pattern=mbrc\.,   slice=4;
+        select, flag=makethin, pattern=mbrs\.,   slice=4;
+        select, flag=makethin, pattern=mbh\.,    slice=4;
+        select, flag=makethin, pattern=mqwa\.,   slice=4;
+        select, flag=makethin, pattern=mqwb\.,   slice=4;
+        select, flag=makethin, pattern=mqy\.,    slice=4;
+        select, flag=makethin, pattern=mqm\.,    slice=4;
+        select, flag=makethin, pattern=mqmc\.,   slice=4;
+        select, flag=makethin, pattern=mqml\.,   slice=4;
+        select, flag=makethin, pattern=mqtlh\.,  slice=2;
+        select, flag=makethin, pattern=mqtli\.,  slice=2;
+        select, flag=makethin, pattern=mqt\.  ,  slice=2;
+        !thin lens
+        if (version >= 50208) { !
+          option rbarc=false; beam;
+          use,sequence=lhcb1; makethin,sequence=lhcb1,makedipedge=true,style=teapot;
+          use,sequence=lhcb2; makethin,sequence=lhcb2,makedipedge=true,style=teapot;
+          option rbarc=true;
+        } else {
+          beam;
+          use,sequence=lhcb1; makethin, sequence=lhcb1,style=teapot;
+          use,sequence=lhcb2; makethin, sequence=lhcb2,style=teapot;
+        }
+      } else {
+        print, text="Sequence is already thin";
+      };
+        is_thin=1;
+      };
+              
       exec, myslice;
       """)
 
     mad.input(f"""
-    nrj=6800;
+    nrj=2681.07;
     beam,particle=proton,sequence=lhcb1,energy=nrj,npart=1.15E11,sige=4.5e-4;
     beam,particle=proton,sequence=lhcb2,energy=nrj,bv = -1,npart=1.15E11,sige=4.5e-4;
     """)
