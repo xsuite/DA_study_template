@@ -185,20 +185,24 @@ def do_levelling(config_collider, config_bb, n_collisions_ip8, collider, n_colli
         )
         initial_I = config_bb["num_particles_per_bunch"]
         config_bb["num_particles_per_bunch"] = I
+    else:
+        initial_I = config_bb["num_particles_per_bunch"]
+        I = initial_I
+
 
     # Then level luminosity in IP 2/8 changing the separation
     additional_targets_lumi = []
-    if "constraints" in config_lumi_leveling["ip8"]:
-        for constraint in config_lumi_leveling["ip8"]["constraints"]:
-            obs, beam, sign, val, at = constraint.split("_")
-            target = xt.TargetInequality(obs, sign, float(val), at=at, line=beam, tol=1e-6)
-            additional_targets_lumi.append(target)
-    luminosity_leveling(
-        collider,
-        config_lumi_leveling=config_lumi_leveling,
-        config_beambeam=config_bb,
-        additional_targets_lumi=additional_targets_lumi,
-    )
+    # if "constraints" in config_lumi_leveling["ip8"]:
+    #     for constraint in config_lumi_leveling["ip8"]["constraints"]:
+    #         obs, beam, sign, val, at = constraint.split("_")
+    #         target = xt.TargetInequality(obs, sign, float(val), at=at, line=beam, tol=1e-6)
+    #         additional_targets_lumi.append(target)
+    # luminosity_leveling(
+    #     collider,
+    #     config_lumi_leveling=config_lumi_leveling,
+    #     config_beambeam=config_bb,
+    #     additional_targets_lumi=additional_targets_lumi,
+    # )
 
     # Update configuration
     config_bb["num_particles_per_bunch_after_optimization"] = I
