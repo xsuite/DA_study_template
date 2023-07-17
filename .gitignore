@@ -34,3 +34,22 @@ master_study/submission_files/*
 # Old analysis
 master_study/old/*
 
+master_study/master_jobs/1_build_distr_and_collider/tree_maker.log
+master_study/master_jobs/1_build_distr_and_collider/collider/collider.json
+master_study/master_jobs/1_build_distr_and_collider/particles/00.parquet
+master_study/master_jobs/1_build_distr_and_collider/particles/01.parquet
+master_study/master_jobs/1_build_distr_and_collider/particles/02.parquet
+master_study/master_jobs/1_build_distr_and_collider/particles/03.parquet
+master_study/master_jobs/1_build_distr_and_collider/particles/04.parquet
+master_study/master_jobs/1_build_distr_and_collider/particles/05.parquet
+master_study/master_jobs/1_build_distr_and_collider/particles/06.parquet
+master_study/master_jobs/1_build_distr_and_collider/particles/07.parquet
+master_study/master_jobs/1_build_distr_and_collider/particles/08.parquet
+master_study/master_jobs/1_build_distr_and_collider/particles/09.parquet
+master_study/master_jobs/1_build_distr_and_collider/particles/10.parquet
+master_study/master_jobs/1_build_distr_and_collider/particles/11.parquet
+master_study/master_jobs/1_build_distr_and_collider/particles/12.parquet
+master_study/master_jobs/1_build_distr_and_collider/particles/13.parquet
+master_study/master_jobs/1_build_distr_and_collider/particles/14.parquet
+master_study/master_jobs/2_configure_and_track/collider.json
+master_study/master_jobs/2_configure_and_track/output_particles.parquet
