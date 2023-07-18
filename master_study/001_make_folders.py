@@ -28,15 +28,15 @@ from user_defined_functions import (
 d_config_particles = {}
 
 # Radius of the initial particle distribution
-d_config_particles["r_min"] = 2
-d_config_particles["r_max"] = 10
-d_config_particles["n_r"] = 2 * 16 * (d_config_particles["r_max"] - d_config_particles["r_min"])
+d_config_particles["r_min"] = 1
+d_config_particles["r_max"] = 1
+d_config_particles["n_r"] = 1#2 * 16 * (d_config_particles["r_max"] - d_config_particles["r_min"])
 
 # Number of angles for the initial particle distribution
-d_config_particles["n_angles"] = 5
+d_config_particles["n_angles"] = 1
 
 # Number of split for parallelization
-d_config_particles["n_split"] = 5
+d_config_particles["n_split"] = 1
 
 # ==================================================================================================
 # --- Optics collider parameters (generation 1)
@@ -61,7 +61,7 @@ d_config_mad["ver_lhc_run"] = 3.0
 
 
 # Beam energy (for both beams)
-beam_energy_tot = 6800
+beam_energy_tot = 450
 d_config_mad["beam_config"]["lhcb1"]["beam_energy_tot"] = beam_energy_tot
 d_config_mad["beam_config"]["lhcb2"]["beam_energy_tot"] = beam_energy_tot
 
@@ -286,8 +286,18 @@ dump_config_in_collider = False
 # optimal DA (e.g. tune, chroma, etc).
 # ==================================================================================================
 # Scan tune with step of 0.001 (need to round to correct for numpy numerical instabilities)
-array_qx = np.round(np.arange(62.305, 62.330, 0.001), decimals=4)[:5]
-array_qy = np.round(np.arange(60.305, 60.330, 0.001), decimals=4)[:5]
+# array_qx = np.round(np.arange(62.305, 62.330, 0.001), decimals=4)[:5]
+# array_qy = np.round(np.arange(60.305, 60.330, 0.001), decimals=4)[:5]
+slicetune = 1
+array_qx = np.round(np.arange(62.310, 62.330, 0.001), decimals=4)[:slicetune]
+array_qy = np.round(np.arange(60.320, 60.330, 0.001), decimals=4)[:slicetune]
+
+# array_slices_hobb = [1,7,11]
+# array_num_particles = [1.0e+11, 1.4e+11, 2.2e+11] 
+
+
+print('array_qx =',array_qx)
+print('array_qy =',array_qy)
 
 # In case one is doing a tune-tune scan, to decrease the size of the scan, we can ignore the
 # working points too close to resonance. Otherwise just delete this variable in the loop at the end

@@ -82,7 +82,7 @@ def build_sequence(
       """)
 
     mad.input(f"""
-    nrj=2681.07;
+    nrj=450;
     beam,particle=proton,sequence=lhcb1,energy=nrj,npart=1.6E11,sige=4.5e-4;
     beam,particle=proton,sequence=lhcb2,energy=nrj,bv = -1,npart=1.6E11,sige=4.5e-4;
     """)
