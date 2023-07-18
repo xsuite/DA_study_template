@@ -124,3 +124,8 @@ for ii in collider.vars.get_independent_vars():
         print(ii)
 # %%
 collider.vars['beambeam_scale']._value 
+# %%
+for ii in config_collider['config_knobs_and_tuning']['knob_settings'].keys():
+    if len(collider.vars[ii]._find_dependant_targets())==1:
+        print(ii)
+# %%

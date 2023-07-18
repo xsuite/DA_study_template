@@ -5,25 +5,25 @@ config_collider:
     knob_settings:
 
       # Exp. configuration in IR1, IR2, IR5 and IR8***
-      on_x1   : -170.000  
+      on_x1   :  -170.000 # polarity from TIMBER FILL 8901 (for Colas)
       on_sep1 :   0.0 #-0.550  
-      phi_IR1 :  180.000  
+      #phi_IR1 :  180.000  
 
-      on_x2h  :    300.000  
+      on_x2h  :    0.000  
       on_sep2h:    1.0 # 1.000  
-      on_x2v  :  0.000  
+      on_x2v  :  300.000  
       on_sep2v:    0.000
-      phi_IR2 :   90.000  
+      #phi_IR2 :   90.000  
 
       on_x5   :  170.000  
       on_sep5 :    0.0 # 0.550  
-      phi_IR5 :   90.000  
+      #phi_IR5 :   90.000  
       
       on_x8h  :    0.000  
       on_sep8h:   -0.001 #-1.000  
-      on_x8v  :  200.000  
+      on_x8v  :  -170.000  # polarity from TIMBER FILL 8901 (for Colas)
       on_sep8v:    0.000 
-      phi_IR8 :  180.000  
+      #phi_IR8 :  180.000  
 
       # Spurious dispersion correction
       on_disp  :    1.000  
