@@ -54,11 +54,26 @@ bb_schedule.n_coll_LHCb
 bb_schedule.n_coll_ALICE
 
 bb_schedule.compute_beam_beam_schedule(
-    n_lr_per_side=[25, 20, 25, 20])    
+    n_lr_per_side=25)    
 
-bb_schedule.b1.bb_schedule.loc[b1_bunch_to_track]
-bb_schedule.b2.bb_schedule.loc[b2_bunch_to_track]
+for ii,zz in zip([bb_schedule.b1,bb_schedule.b2],['Beam 1','Beam 2']):
+    my_bb_schedule= ii.bb_schedule.sort_values(by=['collides in ATLAS/CMS',
+                                                'collides in LHCB',
+                                                'collides in ALICE',
+                                                '# of LR in ATLAS/CMS', 
+                                                '# of LR in ALICE', 
+                                                '# of LR in LHCB',
+                                                ], ascending=False)   
 
+    print(f'Suggested bunch ID for {zz}: {my_bb_schedule.index[0]}') 
+# %%
+bb_schedule_b1 = bb_schedule.b1.bb_schedule.loc[b1_bunch_to_track]
+bb_schedule_b2 = bb_schedule.b2.bb_schedule.loc[b2_bunch_to_track]
+
+print('\nBunch to track in Beam 1:')
+print(bb_schedule_b1)
+print('\nBunch to track in Beam 2:')
+print(bb_schedule_b2)
 
 # %% Compute the luminosity
 from xtrack import lumi
