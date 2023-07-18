@@ -77,18 +77,29 @@ print(bb_schedule_b2)
 
 # %% Compute the luminosity
 from xtrack import lumi
+assert twiss_b1.T_rev0 == twiss_b1.T_rev0
 
-lumi.luminosity_from_twiss(
-    bb_schedule.n_coll_ATLAS,
-    1.6e11,
-    'ip5',  
-    2.2e-6,
-    2.2e-6,
-    0.09,
-    twiss_b1,
-    twiss_b2,
-    crab=False,                          
-)
+for ii, colliding_bunches in zip(['ip1','ip2','ip5','ip8'],
+                                [bb_schedule.n_coll_ATLAS,
+                                 bb_schedule.n_coll_ALICE,
+                                 bb_schedule.n_coll_ATLAS,
+                                 bb_schedule.n_coll_LHCb]):
+    aux = lumi.luminosity_from_twiss(
+        colliding_bunches,
+        config_collider['config_beambeam']['num_particles_per_bunch'],
+        ii,  
+        config_collider['config_beambeam']['nemitt_x'],
+        config_collider['config_beambeam']['nemitt_y'],
+        config_collider['config_beambeam']['sigma_z'],
+        twiss_b1,
+        twiss_b2,
+        crab=False,                          
+    )
+
+    sigma_tot = 81e-27 # cm^2
+    print(f'Luminosity in {ii}: {aux:.2e} cm^-2 s^-1')
+    # compute pile-up from luminosity
+    print(f'Pile-up in {ii}: {aux*sigma_tot/colliding_bunches*twiss_b1.T_rev0:.2e}\n')
 # %%
 for my_ip in ['on_alice_normalized','on_lhcb_normalized']:
     print(f'*****************\nValues for {my_ip} (polarity):')
