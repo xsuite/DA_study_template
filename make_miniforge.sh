@@ -12,6 +12,8 @@ cd xmask
 git submodule init
 git submodule update
 cd ..
+git clone https://github.com/PyCOMPLETE/FillingPatterns.git
+pip install ./FillingPatterns
 cd ..
 xsuite-prebuild
 

@@ -100,8 +100,16 @@ def build_collider_from_mad(config_mad):
     mad_b4 = Madx(command_log="mad_b4.log")
 
     # Build sequences
-    ost.build_sequence(mad_b1b2, mylhcbeam=1, optics_version=ver_lhc)
-    ost.build_sequence(mad_b4, mylhcbeam=4, optics_version=ver_lhc)
+    assert (config_mad['beam_config']['lhcb1']['beam_energy_tot'] == 
+            config_mad['beam_config']['lhcb2']['beam_energy_tot'])
+    ost.build_sequence(mad_b1b2, mylhcbeam=1, 
+                        optics_version=ver_lhc,
+                        energy=config_mad['beam_config']['lhcb1']['beam_energy_tot'], 
+                        slicefactor=config_mad['slicefactor'])
+    ost.build_sequence(mad_b4, mylhcbeam=4,
+                        optics_version=ver_lhc,
+                        energy=config_mad['beam_config']['lhcb1']['beam_energy_tot'], 
+                        slicefactor=config_mad['slicefactor'])
 
     # Apply optics (only for b1b2, b4 will be generated from b1b2)
     ost.apply_optics(mad_b1b2, optics_file=config_mad["optics_file"])

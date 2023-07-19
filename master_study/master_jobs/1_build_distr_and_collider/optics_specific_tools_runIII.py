@@ -4,7 +4,9 @@ from xmask.lhc import install_errors_placeholders_hllhc
 def build_sequence(
     mad,
     mylhcbeam,
+    energy,
     ignore_cycling=False,
+    slicefactor = 1,
     **kwargs,
 ):
     # Select beam
@@ -27,11 +29,11 @@ def build_sequence(
       option, -echo, warn,-info;
       """)
 
-    mad.input("""
+    mad.input(f"""
       ! Slice nominal sequence
-      slicefactor=4;
-      myslice_plus: macro = {
-      if (MBX.4L2->l>0) {
+      slicefactor={slicefactor};
+      myslice_plus: macro = {{
+      if (MBX.4L2->l>0) {{
         select, flag=makethin, clear;
         select, flag=makethin, class=mb, slice=2;
         select, flag=makethin, class=mq, slice=2*slicefactor;
@@ -62,27 +64,27 @@ def build_sequence(
         select, flag=makethin, pattern=mqtli\.,  slice=2*slicefactor;
         select, flag=makethin, pattern=mqt\.  ,  slice=2;
         !thin lens
-        if (version >= 50208) { !
+        if (version >= 50208) {{ !
           option rbarc=false; beam;
           use,sequence=lhcb1; makethin,sequence=lhcb1,makedipedge=true,style=teapot;
           use,sequence=lhcb2; makethin,sequence=lhcb2,makedipedge=true,style=teapot;
           option rbarc=true;
-        } else {
+        }} else {{
           beam;
           use,sequence=lhcb1; makethin, sequence=lhcb1,style=teapot;
           use,sequence=lhcb2; makethin, sequence=lhcb2,style=teapot;
-        }
-      } else {
+        }}
+      }} else {{
         print, text="Sequence is already thin";
-      };
+      }};
         is_thin=1;
-      };
+      }};
               
       exec, myslice_plus;
       """)
 
     mad.input(f"""
-    nrj=2681.07;
+    nrj={energy};
     beam,particle=proton,sequence=lhcb1,energy=nrj,npart=1.6E11,sige=4.5e-4;
     beam,particle=proton,sequence=lhcb2,energy=nrj,bv = -1,npart=1.6E11,sige=4.5e-4;
     """)

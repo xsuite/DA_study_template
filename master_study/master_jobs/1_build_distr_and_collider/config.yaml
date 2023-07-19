@@ -12,7 +12,8 @@ config_mad:
 
   # Optics file
   optics_file: acc-models-lhc/RunIII_dev/Proton_2023/opticsfile.12 #
-
+  slicefactor: 4 
+  
   # Beam parameters
   beam_config:
     lhcb1:

@@ -53,3 +53,4 @@ master_study/master_jobs/1_build_distr_and_collider/particles/13.parquet
 master_study/master_jobs/1_build_distr_and_collider/particles/14.parquet
 master_study/master_jobs/2_configure_and_track/collider.json
 master_study/master_jobs/2_configure_and_track/output_particles.parquet
+master_study/master_jobs/2_configure_and_track/tree_maker.log
