@@ -17,9 +17,9 @@ config_mad:
   # Beam parameters
   beam_config:
     lhcb1:
-      beam_energy_tot: 2681.07 # [GeV]
+      beam_energy_tot: 450 # [GeV]
     lhcb2:
-      beam_energy_tot: 2681.07 # [GeV]
+      beam_energy_tot: 450 # [GeV]
 
   # Enable machine imperfections
   enable_imperfections: false
