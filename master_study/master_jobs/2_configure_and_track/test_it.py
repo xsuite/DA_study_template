@@ -2,13 +2,9 @@
 import xtrack as xt
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
-# add current folder to path
-# import sys
-# sys.path.append(os.getcwd())
-
-
-import configure_and_track as configure_and_track
+#import configure_and_track as configure_and_track
 
 # %%
 collider = xt.Multiline.from_json('collider.json')
@@ -32,7 +28,18 @@ for my_ip in [1,2,5,8]:
 # collider.vars['beambeam_scale'] = 1
 
 # %% filling scheme computation
-config, config_sim, config_collider = configure_and_track.read_configuration()
+# import a yaml file in a dictionary
+import yaml
+with open('config.yaml') as file:
+    config = yaml.load(file, Loader=yaml.SafeLoader)
+config_sim = config['config_simulation']
+config_collider = config['config_collider']
+
+with open('../1_build_distr_and_collider/config.yaml') as file:
+    config_generation_1 = yaml.load(file, Loader=yaml.SafeLoader)
+config_mad = config_generation_1['config_mad']
+
+# %%
 
 filling_scheme = (config_collider['config_beambeam']
                                  ['mask_with_filling_pattern']
@@ -99,7 +106,7 @@ for ii, colliding_bunches in zip(['ip1','ip2','ip5','ip8'],
     sigma_tot = 81e-27 # cm^2
     print(f'Luminosity in {ii}: {aux:.2e} cm^-2 s^-1')
     # compute pile-up from luminosity
-    print(f'Pile-up in {ii}: {aux*sigma_tot/colliding_bunches*twiss_b1.T_rev0:.2e}\n')
+    print(f'Pile-up in {ii}: {aux*sigma_tot/colliding_bunches*twiss_b1.T_rev0:.1f}\n')
 # %%
 for my_ip in ['on_alice_normalized','on_lhcb_normalized']:
     print(f'*****************\nValues for {my_ip} (polarity):')
@@ -124,8 +131,92 @@ for ii in collider.vars.get_independent_vars():
         print(ii)
 # %%
 collider.vars['beambeam_scale']._value 
-# %%
+# %% To check if there are disconnected knobs in the configuration
 for ii in config_collider['config_knobs_and_tuning']['knob_settings'].keys():
     if len(collider.vars[ii]._find_dependant_targets())==1:
         print(ii)
+# %% Some plots
+import numpy as np
+from scipy import constants
+beam_weak = 'b1'
+if beam_weak == 'b1':
+    beam_strong = 'b2'
+    twiss_weak = twiss_b1
+    twiss_strong = twiss_b2
+    survey_weak = survey_b1
+    survey_strong = survey_b2
+else:
+    beam_strong = 'b1'
+    twiss_weak = twiss_b2
+    twiss_strong = twiss_b1
+    survey_weak = survey_b2
+    survey_strong = survey_b1
+
+
+
+assert (config_mad['beam_config']['lhcb1']['beam_energy_tot'] 
+        ==
+        config_mad['beam_config']['lhcb1']['beam_energy_tot'])
+
+energy = config_mad['beam_config']['lhcb1']['beam_energy_tot']
+# gamma relativistic of a proton at 7 TeV
+gamma_rel = energy/(constants.physical_constants['proton mass energy equivalent in MeV'][0]/1000)
+# beta relativistic of a proton at 7 TeV
+beta_rel = np.sqrt(1-1/gamma_rel**2)
+
+emittance_strong_nx = config_collider['config_beambeam']['nemitt_x']
+emittance_strong_ny = config_collider['config_beambeam']['nemitt_y']
+
+emittance_weak_nx = config_collider['config_beambeam']['nemitt_x']
+emittance_weak_ny = config_collider['config_beambeam']['nemitt_y']
+
+emittance_strong_x = emittance_strong_nx/gamma_rel/beta_rel
+emittance_strong_y = emittance_strong_ny/gamma_rel/beta_rel
+
+emittance_weak_x = emittance_weak_nx/gamma_rel/beta_rel
+emittance_weak_y = emittance_weak_ny/gamma_rel/beta_rel
+
+#ax = coordinates['x_sig']
+#ay = coordinates['y_sig']
+for my_ip in [1,2,5,8]:
+    my_filter_string = f'bb_(ho|lr)\.(r|l|c){my_ip}.*'
+    survey_strong_filtered = survey_strong[f'ip{my_ip}'][:,''][:, my_filter_string]
+    survey_weak_filtered = survey_weak[f'ip{my_ip}'][:, my_filter_string]
+    twiss_strong_filtered = twiss_strong[f'ip{my_ip}'][:, my_filter_string]
+    twiss_weak_filtered = twiss_weak[f'ip{my_ip}'][:, my_filter_string]
+
+
+
 # %%
+s = survey_filtered[beam_strong]['Z']
+d_x_weak_strong_in_meter = (
+    twiss_filtered[beam_weak]['x'] - twiss_filtered[beam_strong]['x'] +
+    survey_filtered[beam_weak]['X']- survey_filtered[beam_strong]['X']
+    )
+d_y_weak_strong_in_meter = (
+    twiss_filtered[beam_weak]['y'] - twiss_filtered[beam_strong]['y'] +
+    survey_filtered[beam_weak]['Y']- survey_filtered[beam_strong]['Y']
+    )
+
+sigma_x_strong = np.sqrt(twiss_filtered[beam_strong]['betx']*emittance_strong_x)
+sigma_y_strong = np.sqrt(twiss_filtered[beam_strong]['bety']*emittance_strong_y)
+
+sigma_x_weak = np.sqrt(twiss_filtered[beam_weak]['betx']*emittance_weak_x)
+sigma_y_weak = np.sqrt(twiss_filtered[beam_weak]['bety']*emittance_weak_y)
+
+dx_sig = d_x_weak_strong_in_meter/sigma_x_strong
+dy_sig = d_y_weak_strong_in_meter/sigma_y_strong
+
+A_w_s = sigma_x_weak/sigma_y_strong
+B_w_s = sigma_y_weak/sigma_x_strong
+
+fw = 1 
+r = sigma_y_strong/sigma_x_strong
+
+name_weak = twiss_filtered[beam_weak].name
+
+# %%
+plt.plot(ax,ay,'o')
+plt.xlabel('ax [$\sigma$]')
+plt.ylabel('ay [$\sigma$]')
+plt.axis('square')
