@@ -12,14 +12,18 @@ config_collider:
       on_sep2h: 0.0 # 2.382  
       on_x2v  : -300.0  
       on_sep2v: 0.000 
+      on_a2   : 0.000
+
 
       on_x5   : 170.0 
       on_sep5 : 0.0 # 1.187
       
       on_x8h  :  -170.000  
-      on_sep8h:  -2.382
-      on_x8v  :  0.0 
-      on_sep8v:  0.000  
+      on_sep8h:  0.000 
+      on_x8v  :  0.000
+      on_sep8v:  -2.382  
+      on_a8   :  0.000  
+
 
       # Spurious dispersion correction
       on_disp  : 0.000 
