@@ -31,12 +31,12 @@ for my_ip in [1,2,5,8]:
 # import a yaml file in a dictionary
 import yaml
 with open('config.yaml') as file:
-    config = yaml.load(file, Loader=yaml.SafeLoader)
+    config = yaml.safe_load(file)
 config_sim = config['config_simulation']
 config_collider = config['config_collider']
 
 with open('../1_build_distr_and_collider/config.yaml') as file:
-    config_generation_1 = yaml.load(file, Loader=yaml.SafeLoader)
+    config_generation_1 = yaml.safe_load(file)
 config_mad = config_generation_1['config_mad']
 
 # %%
@@ -44,7 +44,6 @@ config_mad = config_generation_1['config_mad']
 filling_scheme = (config_collider['config_beambeam']
                                  ['mask_with_filling_pattern']
                                  ['pattern_fname'])
-
 b1_bunch_to_track = (config_collider['config_beambeam']
                                  ['mask_with_filling_pattern']
                                  ['i_bunch_b1'])
@@ -152,8 +151,6 @@ else:
     survey_weak = survey_b2
     survey_strong = survey_b1
 
-
-
 assert (config_mad['beam_config']['lhcb1']['beam_energy_tot'] 
         ==
         config_mad['beam_config']['lhcb1']['beam_energy_tot'])
@@ -179,44 +176,48 @@ emittance_weak_y = emittance_weak_ny/gamma_rel/beta_rel
 #ax = coordinates['x_sig']
 #ay = coordinates['y_sig']
 for my_ip in [1,2,5,8]:
+    survey_filtered = {}
+    twiss_filtered = {}
     my_filter_string = f'bb_(ho|lr)\.(r|l|c){my_ip}.*'
-    survey_strong_filtered = survey_strong[f'ip{my_ip}'][:,''][:, my_filter_string]
-    survey_weak_filtered = survey_weak[f'ip{my_ip}'][:, my_filter_string]
-    twiss_strong_filtered = twiss_strong[f'ip{my_ip}'][:, my_filter_string]
-    twiss_weak_filtered = twiss_weak[f'ip{my_ip}'][:, my_filter_string]
+    survey_filtered[beam_strong] = survey_strong[f'ip{my_ip}'][['X','Y','Z'], my_filter_string]
+    survey_filtered[beam_weak] = survey_weak[f'ip{my_ip}'][['X','Y','Z'], my_filter_string]
+    twiss_filtered[beam_strong] = twiss_strong[:, my_filter_string]
+    twiss_filtered[beam_weak] = twiss_weak[:, my_filter_string]
+
+    s = survey_filtered[beam_strong]['Z']
+    d_x_weak_strong_in_meter = (
+        twiss_filtered[beam_weak]['x'] - twiss_filtered[beam_strong]['x'] +
+        survey_filtered[beam_weak]['X']- survey_filtered[beam_strong]['X']
+        )
+    d_y_weak_strong_in_meter = (
+        twiss_filtered[beam_weak]['y'] - twiss_filtered[beam_strong]['y'] +
+        survey_filtered[beam_weak]['Y']- survey_filtered[beam_strong]['Y']
+        )
+
+    sigma_x_strong = np.sqrt(twiss_filtered[beam_strong]['betx']*emittance_strong_x)
+    sigma_y_strong = np.sqrt(twiss_filtered[beam_strong]['bety']*emittance_strong_y)
+
+    sigma_x_weak = np.sqrt(twiss_filtered[beam_weak]['betx']*emittance_weak_x)
+    sigma_y_weak = np.sqrt(twiss_filtered[beam_weak]['bety']*emittance_weak_y)
+
+    dx_sig = d_x_weak_strong_in_meter/sigma_x_strong
+    dy_sig = d_y_weak_strong_in_meter/sigma_y_strong
+
+    A_w_s = sigma_x_weak/sigma_y_strong
+    B_w_s = sigma_y_weak/sigma_x_strong
+
+    fw = 1 
+    r = sigma_y_strong/sigma_x_strong
+
+    name_weak = twiss_filtered[beam_weak].name
+
+    plt.figure()
+    plt.title(f'IP{my_ip}')
+    plt.plot(s, np.abs(dx_sig), 'ob', label='x')
+    plt.plot(s, np.abs(dy_sig), 'sr', label='y')
+    plt.legend()
+    plt.grid(True)
 
 
 
 # %%
-s = survey_filtered[beam_strong]['Z']
-d_x_weak_strong_in_meter = (
-    twiss_filtered[beam_weak]['x'] - twiss_filtered[beam_strong]['x'] +
-    survey_filtered[beam_weak]['X']- survey_filtered[beam_strong]['X']
-    )
-d_y_weak_strong_in_meter = (
-    twiss_filtered[beam_weak]['y'] - twiss_filtered[beam_strong]['y'] +
-    survey_filtered[beam_weak]['Y']- survey_filtered[beam_strong]['Y']
-    )
-
-sigma_x_strong = np.sqrt(twiss_filtered[beam_strong]['betx']*emittance_strong_x)
-sigma_y_strong = np.sqrt(twiss_filtered[beam_strong]['bety']*emittance_strong_y)
-
-sigma_x_weak = np.sqrt(twiss_filtered[beam_weak]['betx']*emittance_weak_x)
-sigma_y_weak = np.sqrt(twiss_filtered[beam_weak]['bety']*emittance_weak_y)
-
-dx_sig = d_x_weak_strong_in_meter/sigma_x_strong
-dy_sig = d_y_weak_strong_in_meter/sigma_y_strong
-
-A_w_s = sigma_x_weak/sigma_y_strong
-B_w_s = sigma_y_weak/sigma_x_strong
-
-fw = 1 
-r = sigma_y_strong/sigma_x_strong
-
-name_weak = twiss_filtered[beam_weak].name
-
-# %%
-plt.plot(ax,ay,'o')
-plt.xlabel('ax [$\sigma$]')
-plt.ylabel('ay [$\sigma$]')
-plt.axis('square')
