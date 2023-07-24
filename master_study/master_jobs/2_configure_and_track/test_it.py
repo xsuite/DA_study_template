@@ -218,6 +218,15 @@ for my_ip in [1,2,5,8]:
     plt.legend()
     plt.grid(True)
 
+    plt.figure()
+    plt.title(f'IP{my_ip}')
+    plt.plot(s, twiss_filtered[beam_weak]['x'], 'ob', label=f'x {beam_weak}')
+    plt.plot(s,  twiss_filtered[beam_strong]['x'], 'sb', label=f'x {beam_strong}')
+    plt.plot(s, twiss_filtered[beam_weak]['y'], 'or', label=f'y {beam_weak}')
+    plt.plot(s,  twiss_filtered[beam_strong]['y'], 'sr', label=f'y {beam_strong}')
+    plt.legend()
+    plt.grid(True)
+
 
 
 # %%

@@ -6,3 +6,4 @@ psutil
 xsuite
 cpymad
 matplotlib
+ipynb-py-convert
