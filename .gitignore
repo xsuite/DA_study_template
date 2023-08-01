@@ -65,3 +65,4 @@ master_study/master_jobs/1_build_distr_and_collider/mad_b4.log
 master_study/master_jobs/1_build_distr_and_collider/mad_collider.log
 master_study/master_jobs/2_configure_and_track/correction/corr_co_lhcb1.json
 master_study/master_jobs/2_configure_and_track/correction/corr_co_lhcb2.json
+master_study/master_jobs/2_configure_and_track/test_it.ipynb
