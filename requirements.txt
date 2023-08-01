@@ -7,3 +7,5 @@ xsuite
 cpymad
 matplotlib
 ipynb-py-convert
+pyNAFF
+NAFFlib
