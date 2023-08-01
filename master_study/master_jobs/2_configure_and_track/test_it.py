@@ -426,13 +426,14 @@ def _footprint_with_linear_rescale(linear_rescale_on_knobs, line,
             knobs_1[nn] = v0 + dv
 
             with xt._temp_knobs(line, knobs_1):
-                fp1 = line.get_footprint(freeze_longitudinal=freeze_longitudinal,
+                fp1 = get_footprint(line, freeze_longitudinal=freeze_longitudinal,
                                         delta0=delta0, zeta0=zeta0, **kwargs)
             delta_qx = (fp1.qx - qx0) / dv * (line.vars[nn]._value - v0)
             delta_qy = (fp1.qy - qy0) / dv * (line.vars[nn]._value - v0)
 
             fp.qx += delta_qx
             fp.qy += delta_qy
+            fp.mon = fp1.mon
 
         return fp
 
@@ -676,19 +677,26 @@ def get_footprint(line, nemitt_x=None, nemitt_y=None, n_turns=256, n_fft=2**18,
 # %%
 collider.vars['beambeam_scale'] = 1
 collider['lhcb1'].vars['i_oct_b1'] = 100
-fp1 = get_footprint(collider['lhcb1'], nemitt_x = collider.config['config_beambeam']['nemitt_x'],
-                                      nemitt_y = collider.config['config_beambeam']['nemitt_y'],
-                                      freeze_longitudinal=True, 
-                                      theta_range = (0.05, np.pi / 2 - 0.05),
-                                      n_r =11,
-                                      n_theta=11,
-                                      n_turns=2048, 
-                                      n_fft=2048, 
-                                      delta0=0, 
-                                      zeta0=0)
+#collider.vars['dqy.b1_sq'] -= 0.006
+
+fp1 = get_footprint(collider['lhcb1'],
+                    nemitt_x = collider.config['config_beambeam']['nemitt_x'],
+                    nemitt_y = collider.config['config_beambeam']['nemitt_y'],
+                    freeze_longitudinal=False, 
+                    theta_range = (0.05, np.pi / 2 - 0.05),
+                    n_r =11,
+                    n_theta=11,
+                    n_turns=1024, 
+                    n_fft=1024, 
+                    delta0=0, 
+                    zeta0=0,
+                    mode='polar',)
 # %%
 import PyNAFF as pnf
 import NAFFlib
+from PySUSSIX import PySussix
+
+my_twiss = collider['lhcb1'].twiss()
 
 signal = fp1.mon.x[-10,:]
 signal = fp1.mon.y[-10,:]
@@ -696,19 +704,41 @@ qx_pynaff = []
 qy_pynaff = []
 qx_nafflib = []
 qy_nafflib = []
+qx_sussix = []
+qy_sussix = []
+
+
 (my_len,_) = np.shape(fp1.mon.x)
 
 for ii in range(my_len):   
     signal = fp1.mon.x[ii,:]
-    qx_pynaff.append(pnf.naff(signal, fp1.n_turns, 1, 0 , False)[0][1])
+    #qx_pynaff.append(pnf.naff(signal, fp1.n_turns, 1, 0 , False)[0][1])
     qx_nafflib.append(NAFFlib.get_tune(signal))
     signal = fp1.mon.y[ii,:]
-    qy_pynaff.append(pnf.naff(signal, fp1.n_turns, 1, 0 , False)[0][1])
-    qy_pynaff.append(NAFFlib.get_tune(signal))
+    #qy_pynaff.append(pnf.naff(signal, fp1.n_turns, 1, 0 , False)[0][1])
+    qy_nafflib.append(NAFFlib.get_tune(signal))
 
+    my_sussix = PySussix.Sussix()
+    my_sussix.sussix_inp(nt1=1, nt2=fp1.n_turns, idam=2, ir=1,
+                   tunex=my_twiss.qx-np.floor(my_twiss.qx), 
+                   tuney=my_twiss.qy-np.floor(my_twiss.qy))
+    
+    ans  = my_sussix.sussix(fp1.mon.x[ii,:],
+                     fp1.mon.px[ii,:],
+                     fp1.mon.y[ii,:],
+                     fp1.mon.py[ii,:],
+                     fp1.mon.zeta[ii,:],
+                     fp1.mon.delta[ii,:])
+    qx_sussix.append(my_sussix.ox[0])
+    qy_sussix.append(my_sussix.oy[0])
 
+# %%
+fp1.plot(color='b',linewidth=0, marker='o', markersize=3)
 
-plt.plot(qx_pynaff,qy_pynaff,'.')
+plt.plot(qx_nafflib, qy_nafflib,'+r')
+#plt.plot(qx_pynaff, qy_pynaff,'.b')
+plt.plot(qx_sussix, qy_sussix,'xm')
+
 plt.plot([.29,.32],[.29,.32],'-')
 # plt.xlim(.305,.315)
 # plt.ylim(.315,.325)
@@ -717,8 +747,11 @@ plt.plot([.29,.32],[.29,.32],'-')
 
 plt.plot(fp1.x_norm_2d, fp1.y_norm_2d, 'ro')
 
-aux = np.reshape(np.array(qx_pynaff)-np.array(qy_pynaff), fp1.x_norm_2d.shape)
-my_filter = np.abs(aux)<1e-6
+aux = np.reshape(np.array(qx_sussix)-np.array(qy_sussix), fp1.x_norm_2d.shape)
+my_filter = np.abs(aux)<1e-5
 plt.plot(fp1.x_norm_2d[my_filter], fp1.y_norm_2d[my_filter], 'b.')
+
+# %%
+fp1.plot(color='b',lw=None)
 
 # %%
