@@ -341,8 +341,8 @@ for my_ip in (['ip1','ip2','ip5','ip8']):
     my_luminosity[my_ip], my_pileup[my_ip] = compute_luminosity(collider, ip=my_ip)
 
 # %% Compute the footprint
-collider.vars['beambeam_scale'] = 0
-collider['lhcb1'].vars['i_oct_b1'] = 100
+collider.vars['beambeam_scale'] = 1
+#collider['lhcb1'].vars['i_oct_b1'] = 100
 fp1 = collider['lhcb1'].get_footprint(nemitt_x = collider.config['config_beambeam']['nemitt_x'],
                                       nemitt_y = collider.config['config_beambeam']['nemitt_y'],
                                       freeze_longitudinal=True, 
@@ -350,9 +350,10 @@ fp1 = collider['lhcb1'].get_footprint(nemitt_x = collider.config['config_beambea
                                       n_fft=2048, 
                                       delta0=0, 
                                       zeta0=0)
-fp1.plot(color='b')
-collider.vars['beambeam_scale'] = 1
-collider['lhcb1'].vars['i_oct_b1'] = 100
+# %%
+fp1.plot(color='b', lw= 0, marker = 'o', markersize=2)
+
+
 
 
 # %%
@@ -366,14 +367,6 @@ collider.vars['beambeam_scale'] = 0
 print(collider['lhcb1'].twiss()[['betx','bety'],'ip[1,2,5,8]'])
 collider.vars['beambeam_scale'] = 1
 
-# %%
-for ii in range(0,len(fp1.fft_x)):
-    plt.semilogy(np.abs(fp1.fft_x[-10]))
-    #plt.plot(np.abs(fp1.fft_y[ii]))
-
-#plt.xlim(500,700)
-# %%
-freq_axis = np.fft.rfftfreq(fp1.n_fft)
 # %%
 plt.plot(fp1.x_norm_2d, fp1.y_norm_2d, 'o')
 
@@ -675,8 +668,8 @@ def get_footprint(line, nemitt_x=None, nemitt_y=None, n_turns=256, n_fft=2**18,
     return fp
 
 # %%
-collider.vars['beambeam_scale'] = 1
-collider['lhcb1'].vars['i_oct_b1'] = 100
+#collider.vars['beambeam_scale'] = 1
+#collider['lhcb1'].vars['i_oct_b1'] = 100
 #collider.vars['dqy.b1_sq'] -= 0.006
 
 fp1 = get_footprint(collider['lhcb1'],
@@ -712,10 +705,10 @@ qy_sussix = []
 
 for ii in range(my_len):   
     signal = fp1.mon.x[ii,:]
-    #qx_pynaff.append(pnf.naff(signal, fp1.n_turns, 1, 0 , False)[0][1])
+    qx_pynaff.append(pnf.naff(signal, fp1.n_turns, 1, 0 , False)[0][1])
     qx_nafflib.append(NAFFlib.get_tune(signal))
     signal = fp1.mon.y[ii,:]
-    #qy_pynaff.append(pnf.naff(signal, fp1.n_turns, 1, 0 , False)[0][1])
+    qy_pynaff.append(pnf.naff(signal, fp1.n_turns, 1, 0 , False)[0][1])
     qy_nafflib.append(NAFFlib.get_tune(signal))
 
     my_sussix = PySussix.Sussix()
@@ -736,7 +729,7 @@ for ii in range(my_len):
 fp1.plot(color='b',linewidth=0, marker='o', markersize=3)
 
 plt.plot(qx_nafflib, qy_nafflib,'+r')
-#plt.plot(qx_pynaff, qy_pynaff,'.b')
+plt.plot(qx_pynaff, qy_pynaff,'.k')
 plt.plot(qx_sussix, qy_sussix,'xm')
 
 plt.plot([.29,.32],[.29,.32],'-')
@@ -748,10 +741,7 @@ plt.plot([.29,.32],[.29,.32],'-')
 plt.plot(fp1.x_norm_2d, fp1.y_norm_2d, 'ro')
 
 aux = np.reshape(np.array(qx_sussix)-np.array(qy_sussix), fp1.x_norm_2d.shape)
-my_filter = np.abs(aux)<1e-5
+my_filter = np.abs(aux)<1e-4
 plt.plot(fp1.x_norm_2d[my_filter], fp1.y_norm_2d[my_filter], 'b.')
-
-# %%
-fp1.plot(color='b',lw=None)
 
 # %%
