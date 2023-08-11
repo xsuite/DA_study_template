@@ -11,9 +11,9 @@ import shutil
 import copy
 import json
 from user_defined_functions import (
-    generate_run_sh_htc,
+    generate_run_sh,
     get_worst_bunch,
-    reformat_filling_scheme_from_lpc,
+    reformat_filling_scheme_from_lpc_alt,
 )
 
 # ==================================================================================================
@@ -84,8 +84,8 @@ d_config_tune_and_chroma = {
 for beam in ["lhcb1", "lhcb2"]:
     d_config_tune_and_chroma["qx"][beam] = 62.31
     d_config_tune_and_chroma["qy"][beam] = 60.32
-    d_config_tune_and_chroma["dqx"][beam] = 5.0
-    d_config_tune_and_chroma["dqy"][beam] = 5.0
+    d_config_tune_and_chroma["dqx"][beam] = 15.0
+    d_config_tune_and_chroma["dqy"][beam] = 15.0
 
 # Value to be added to linear coupling knobs
 d_config_tune_and_chroma["delta_cmr"] = 0.001
@@ -116,16 +116,25 @@ d_config_knobs["i_oct_b2"] = 60.0
 
 ### leveling configuration
 
+# Leveling in IP 1/5
+d_config_leveling_ip1_5 = {"constraints": {}}
+d_config_leveling_ip1_5["luminosity"] = 2.0e34
+d_config_leveling_ip1_5["constraints"]["max_intensity"] = 1.8e11
+d_config_leveling_ip1_5["constraints"]["max_PU"] = 70
+
+
 # Define dictionary for the leveling settings
-d_config_leveling = {"ip2": {}, "ip8": {}}
+d_config_leveling = {
+    "ip2": {},
+    "ip8": {},
+}
 
 # Luminosity and particles
-skip_leveling = False
+
 
 # Leveling parameters (ignored if skip_leveling is True)
 d_config_leveling["ip2"]["separation_in_sigmas"] = 5
 d_config_leveling["ip8"]["luminosity"] = 2.0e33
-# "num_colliding_bunches" is set in the 1_build_distr_and_collider script, depending on the filling scheme
 
 ### Beam beam configuration
 
@@ -164,7 +173,7 @@ if "beam1" in d_filling_scheme.keys() and "beam2" in d_filling_scheme.keys():
 # Otherwise, we need to reformat the file
 else:
     # One can potentially use b1_array, b2_array to scan the bunches later
-    b1_array, b2_array = reformat_filling_scheme_from_lpc(filling_scheme_path)
+    b1_array, b2_array = reformat_filling_scheme_from_lpc_alt(filling_scheme_path)
     filling_scheme_path = filling_scheme_path.replace(".json", "_converted.json")
 
 
@@ -184,7 +193,6 @@ if check_bunch_number:
     # elements), must be specified otherwise)
     # If the bunch number is None and pattern_name is defined, the bunch with the largest number of
     # long-range interactions will be used
-
     if d_config_beambeam["mask_with_filling_pattern"]["i_bunch_b1"] is None:
         # Case the bunch number has not been provided
         worst_bunch_b1 = get_worst_bunch(
@@ -230,7 +238,7 @@ d_config_collider["config_knobs_and_tuning"] = d_config_tune_and_chroma
 d_config_collider["config_knobs_and_tuning"]["knob_settings"] = d_config_knobs
 
 # Add luminosity configuration
-d_config_collider["skip_leveling"] = skip_leveling
+d_config_collider["config_lumi_leveling_ip1_5"] = d_config_leveling_ip1_5
 d_config_collider["config_lumi_leveling"] = d_config_leveling
 
 # Add beam beam configuration
@@ -330,6 +338,8 @@ for idx_job, (track, qx, qy) in enumerate(itertools.product(track_array, array_q
         "log_file": "tree_maker.log",
         "dump_collider": dump_collider,
         "dump_config_in_collider": dump_config_in_collider,
+        "dump_collider": dump_collider,
+        "dump_config_in_collider": dump_config_in_collider,
     }
 
 # ==================================================================================================
@@ -342,7 +352,7 @@ config = yaml.safe_load(open("config.yaml"))
 config["root"]["children"] = children
 
 # Set miniconda environment path in the config
-config["root"]["setup_env_script"] = os.getcwd() + "/../miniforge/bin/activate"
+config["root"]["setup_env_script"] = os.getcwd() + "/../activate_miniforge.sh"
 
 # ==================================================================================================
 # --- Build tree and write it to the filesystem
@@ -365,7 +375,7 @@ print("--- %s seconds ---" % (time.time() - start_time))
 
 # From python objects we move the nodes to the filesystem.
 start_time = time.time()
-root.make_folders(generate_run_sh_htc)
+root.make_folders(generate_run_sh)
 print("The tree folders are ready.")
 print("--- %s seconds ---" % (time.time() - start_time))
 
