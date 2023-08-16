@@ -7,10 +7,10 @@ FILE=/usr/local/DA_study/miniforge_docker/bin/activate
 # Check if  the job is launched from docker
 if [[ -f "$FILE" ]];
 
-# source the make_miniforge.sh script, concatenating the path to the script directory
+# Source the make_miniforge.sh script
 then
     source $FILE
-# Only activate environment 
+# Activate miniforge from afs
 else
     source $SCRIPT_DIR/miniforge/bin/activate
 fi
