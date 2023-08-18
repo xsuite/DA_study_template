@@ -271,11 +271,10 @@ def do_levelling(
 # --- Function to add linear coupling
 # ==================================================================================================
 def add_linear_coupling(conf_knobs_and_tuning, collider, config_mad):
-    
     # Get the version of the optics
     version_hllhc = config_mad["ver_hllhc_optics"]
     version_run = config_mad["ver_lhc_run"]
-    
+
     # Add linear coupling as the target in the tuning of the base collider was 0
     # (not possible to set it the target to 0.001 for now)
     if version_run == 3.0:
@@ -286,7 +285,6 @@ def add_linear_coupling(conf_knobs_and_tuning, collider, config_mad):
         collider.vars["c_minus_re_b2"] += conf_knobs_and_tuning["delta_cmr"]
     else:
         raise ValueError(f"Unknown version of the optics/run: {version_hllhc}, {version_run}.")
-
 
     return collider
 
