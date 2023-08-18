@@ -1,4 +1,34 @@
 from xmask.lhc import install_errors_placeholders_hllhc
+import numpy as np
+
+
+def check_madx_lattices(mad):
+    assert mad.globals["qxb1"] == mad.globals["qxb2"]
+    assert mad.globals["qyb1"] == mad.globals["qyb2"]
+    assert mad.globals["qpxb1"] == mad.globals["qpxb2"]
+    assert mad.globals["qpyb1"] == mad.globals["qpyb2"]
+
+    assert np.isclose(mad.table.summ.q1, mad.globals["qxb1"], atol=1e-05)
+    assert np.isclose(mad.table.summ.q2, mad.globals["qyb1"], atol=1e-05)
+    assert np.isclose(mad.table.summ.dq1, mad.globals["qpxb1"], atol=1e-03)
+    assert np.isclose(mad.table.summ.dq2, mad.globals["qpyb1"], atol=1e-03)
+
+    df = mad.table.twiss.dframe()
+    for my_ip in [1, 2, 5, 8]:
+        assert np.isclose(df.loc[f"ip{my_ip}"].betx, mad.globals[f"betx_IP{my_ip}"], rtol=1e-03)
+        assert np.isclose(df.loc[f"ip{my_ip}"].bety, mad.globals[f"bety_IP{my_ip}"], rtol=1e-03)
+
+    assert df["x"].std() < 1e-8
+    assert df["y"].std() < 1e-8
+
+
+def check_xsuite_lattices(my_line):
+    tw = my_line.twiss(method="6d", matrix_stability_tol=100)
+    print(f"--- Now displaying Twiss result at all IPS for line {my_line}---")
+    print(tw[:, "ip.*"])
+    # print qx and qy
+    print(f"--- Now displaying Qx and Qy for line {my_line}---")
+    print(tw.qx, tw.qy)
 
 
 def build_sequence(mad, mylhcbeam, ignore_cycling=False):
