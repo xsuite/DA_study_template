@@ -1,12 +1,7 @@
 from xmask.lhc import install_errors_placeholders_hllhc
 
 
-def build_sequence(
-    mad,
-    mylhcbeam,
-    ignore_cycling=False,
-    **kwargs,
-):
+def build_sequence(mad, mylhcbeam, ignore_cycling=False):
     # Select beam
     mad.input(f"mylhcbeam = {mylhcbeam}")
 
