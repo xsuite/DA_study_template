@@ -190,13 +190,18 @@ def do_levelling(
         cross_section = 81e-27
 
         # Do the levelling
-        I, L_1_5 = luminosity_leveling_ip1_5(
-            collider,
-            config_collider,
-            config_bb,
-            cross_section,
-            crab=False,
-        )
+        try:
+            I, L_1_5 = luminosity_leveling_ip1_5(
+                collider,
+                config_collider,
+                config_bb,
+                cross_section,
+                crab=False,
+            )
+        except ValueError:
+            print("There was a problem during the luminosity leveling in IP1/5... Ignoring it.")
+            I = config_bb["num_particles_per_bunch"]
+            L_1_5 = 0
         initial_I = config_bb["num_particles_per_bunch"]
         config_bb["num_particles_per_bunch"] = I
 
@@ -439,7 +444,7 @@ def configure_collider(
                 "config_mad": config_mad,
                 "config_collider": config_collider,
             }
-            collider_dict["config_yaml"] = config_dict 
+            collider_dict["config_yaml"] = config_dict
 
             class NpEncoder(json.JSONEncoder):
                 def default(self, obj):
@@ -450,11 +455,11 @@ def configure_collider(
                     if isinstance(obj, np.ndarray):
                         return obj.tolist()
                     return super(NpEncoder, self).default(obj)
+
             #  collider.set_metadata(config_dict)
             with open("collider.json", "w") as fid:
                 json.dump(collider_dict, fid, cls=NpEncoder)
         else:
-            
             collider.to_json("collider.json")
 
     if return_collider_before_bb:
