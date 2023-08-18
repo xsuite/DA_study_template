@@ -9,3 +9,4 @@ matplotlib
 ipynb-py-convert
 pyNAFF
 NAFFlib
+moviepy

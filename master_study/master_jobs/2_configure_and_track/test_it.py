@@ -129,6 +129,11 @@ twiss_b2 = collider['lhcb2'].twiss().reverse()
 plt.plot(twiss_b1.s, twiss_b1.x, 'b')
 plt.plot(twiss_b2.s, twiss_b2.x, 'r')
 
+plt.figure()
+plt.plot(twiss_b1.s, twiss_b1.y, 'b')
+plt.plot(twiss_b2.s, twiss_b2.y, 'r')
+
+
 # %%
 for ii in collider.vars.get_independent_vars():
     if 'beam' in ii:
@@ -744,4 +749,63 @@ aux = np.reshape(np.array(qx_sussix)-np.array(qy_sussix), fp1.x_norm_2d.shape)
 my_filter = np.abs(aux)<1e-4
 plt.plot(fp1.x_norm_2d[my_filter], fp1.y_norm_2d[my_filter], 'b.')
 
+
+
+# %%
+# importing matplot lib
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.interpolate import interp1d as interp1d
+
+# importing movie py libraries
+from moviepy.editor import VideoClip
+from moviepy.video.io.bindings import mplfig_to_npimage
+ 
+ 
+# duration of the video
+duration = 10
+my_fps = 1
+t = np.linspace(0, duration, duration+1)
+on_x2v_range = np.linspace(-170, -350, duration +1)
+on_sep2h_range = np.linspace(-3.5, 0, duration +1)
+
+on_x2v_linear = interp1d(t, on_x2v_range) 
+on_sep2h_linear = interp1d(t, on_sep2h_range)
+
+
+ 
+# matplot subplot
+fig, ax = plt.subplots()
+ 
+# method to get frames
+def make_frame(t):
+     
+    # clear
+    ax.clear()
+    on_x2v =on_x2v_linear(t)
+    on_sep2h = on_sep2h_linear(t) 
+    collider.vars['on_x2v'] = on_x2v
+    collider.vars['on_sep2h'] = on_sep2h
+    my_dict = compute_separation(collider, ip='ip2')
+    ip_dict = my_dict
+    ax.plot(ip_dict['s'], np.abs(ip_dict['dx_sig']), 'ob', label='x')
+    ax.plot(ip_dict['s'], np.abs(ip_dict['dy_sig']), 'sr', label='y')
+    ax.set_xlabel('s [m]')
+    ax.set_ylabel('separation [$\sigma$]')
+    ax.legend(loc='upper right')
+    ax.grid(True)
+    # plot_orbits(my_dict)
+    # ax = plt.gca()
+    # ax.set_title(f'on_x2v={on_x2v}, on_sep2h={on_sep2h}')
+    # plot_separation(my_dict)
+    # ax = plt.gca()
+    ax.set_title(f'on_x2v={on_x2v:.1f}, on_sep2h={on_sep2h:.2f}, ALICE polarity = {collider.vars["on_alice_normalized"]._value}')
+    # returning numpy image
+    return mplfig_to_npimage(fig)
+ 
+# creating animation
+animation = VideoClip(make_frame, duration = duration+1)
+ 
+# displaying animation with auto play and looping
+animation.ipython_display(fps = 1, loop = True, autoplay = True)
 # %%
