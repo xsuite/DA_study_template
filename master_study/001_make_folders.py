@@ -28,15 +28,15 @@ from user_defined_functions import (
 d_config_particles = {}
 
 # Radius of the initial particle distribution
-d_config_particles["r_min"] = 1
-d_config_particles["r_max"] = 1
-d_config_particles["n_r"] = 1#2 * 16 * (d_config_particles["r_max"] - d_config_particles["r_min"])
+d_config_particles["r_min"] = 2
+d_config_particles["r_max"] = 10
+d_config_particles["n_r"] = 2 * 16 * (d_config_particles["r_max"] - d_config_particles["r_min"])
 
 # Number of angles for the initial particle distribution
-d_config_particles["n_angles"] = 1
+d_config_particles["n_angles"] = 5
 
 # Number of split for parallelization
-d_config_particles["n_split"] = 1
+d_config_particles["n_split"] = 15
 
 # ==================================================================================================
 # --- Optics collider parameters (generation 1)
@@ -55,13 +55,13 @@ d_config_mad = {"beam_config": {"lhcb1": {}, "lhcb2": {}}, "links": {}}
 
 ### For run III
 d_config_mad["links"]["acc-models-lhc"] = "/afs/cern.ch/eng/lhc/optics/runIII"
-d_config_mad["optics_file"] = "acc-models-lhc/RunIII_dev/Proton_2024/V0/opticsfile.40"
+d_config_mad["optics_file"] = "acc-models-lhc/RunIII_dev/Proton_2023/opticsfile.12"
 d_config_mad["ver_hllhc_optics"] = None
 d_config_mad["ver_lhc_run"] = 3.0
 
 
 # Beam energy (for both beams)
-beam_energy_tot = 450
+beam_energy_tot = 2681.07
 d_config_mad["beam_config"]["lhcb1"]["beam_energy_tot"] = beam_energy_tot
 d_config_mad["beam_config"]["lhcb2"]["beam_energy_tot"] = beam_energy_tot
 
@@ -100,37 +100,38 @@ d_config_tune_and_chroma["delta_cmi"] = 0.0
 d_config_knobs = {}
 
 # Exp. configuration in IR1, IR2, IR5 and IR8
-d_config_knobs["on_x1"] = -145.000
-d_config_knobs["on_sep1"] = 0.0
-d_config_knobs["phi_IR1"] = 180.000
+d_config_knobs["on_x1"] = -170.000
+d_config_knobs["on_sep1"] = - 0.0215 # IP1 is levelled at pileup = 4
+d_config_knobs["phi_IR1"] = 90.000
 
 d_config_knobs["on_x2h"] = 0.000
-d_config_knobs["on_sep2h"] = 1.0  # 1.000
-d_config_knobs["on_x2v"] = 200.000
+d_config_knobs["on_sep2h"] = 0.164  #  IP2 is levelled at lumi = 1.25e31 cm-2s-1
+d_config_knobs["on_x2v"] = 300.000
 d_config_knobs["on_sep2v"] = 0.000
 d_config_knobs["phi_IR2"] = 90.000
 
-d_config_knobs["on_x5"] = 145.000
+d_config_knobs["on_x5"] = 170.000
 d_config_knobs["on_sep5"] = 0.0
-d_config_knobs["phi_IR5"] = 90.000
+d_config_knobs["phi_IR5"] = 0.000
 
-d_config_knobs["on_x8h"] = 0.000
-d_config_knobs["on_sep8h"] = -0.01  # -1.000
-d_config_knobs["on_x8v"] = 200.000
-d_config_knobs["on_sep8v"] = 0.000
-d_config_knobs["phi_IR8"] = 180.000
+d_config_knobs["on_x8h"] = -170.000
+d_config_knobs["on_sep8h"] = 0  # -1.000
+d_config_knobs["on_x8v"] = 0.000
+d_config_knobs["on_sep8v"] = -0.055 # IP8 is levelled at pileup = 1 # decided a bit arbitrary
+d_config_knobs["phi_IR8"] = 0.000
+
 
 # Octupoles
-d_config_knobs["i_oct_b1"] = 300.0
-d_config_knobs["i_oct_b2"] = 300.0
+d_config_knobs["i_oct_b1"] = 60.0
+d_config_knobs["i_oct_b2"] = 60.0
 
 ### leveling configuration
 
 # Leveling in IP 1/5
 d_config_leveling_ip1_5 = {"constraints": {}}
 d_config_leveling_ip1_5["luminosity"] = 2.0e34
-d_config_leveling_ip1_5["constraints"]["max_intensity"] = 1.8e11
-d_config_leveling_ip1_5["constraints"]["max_PU"] = 70
+d_config_leveling_ip1_5["constraints"]["max_intensity"] = 1.4e11
+d_config_leveling_ip1_5["constraints"]["max_PU"] = 10
 
 
 # Define dictionary for the leveling settings
@@ -152,7 +153,7 @@ d_config_leveling["ip8"]["luminosity"] = 2.0e32
 d_config_beambeam = {"mask_with_filling_pattern": {}}
 
 # Beam settings
-d_config_beambeam["num_particles_per_bunch"] = 1.15e11
+d_config_beambeam["num_particles_per_bunch"] = 1.4e11
 d_config_beambeam["nemitt_x"] = 2.2e-6
 d_config_beambeam["nemitt_y"] = 2.2e-6
 
@@ -160,7 +161,7 @@ d_config_beambeam["nemitt_y"] = 2.2e-6
 # The scheme should consist of a json file containing two lists of booleans (one for each beam),
 # representing each bucket of the LHC.
 filling_scheme_path = os.path.abspath(
-    "master_jobs/filling_scheme/25ns_1886b_1873_1217_1173_236bpi_12inj_hybrid_2INDIV.json"
+    "master_jobs/filling_scheme/25ns_2358b_2345_1692_1628_236bpi_14inj_hybrid_2INDIV.json"
 )
 
 # Alternatively, one can get a fill directly from LPC from, e.g.:
@@ -193,8 +194,8 @@ d_config_beambeam["mask_with_filling_pattern"][
 ] = filling_scheme_path  # If None, a full fill is assumed
 
 
-d_config_beambeam["mask_with_filling_pattern"]["i_bunch_b1"] = 847
-d_config_beambeam["mask_with_filling_pattern"]["i_bunch_b2"] = 847
+d_config_beambeam["mask_with_filling_pattern"]["i_bunch_b1"] = 697
+d_config_beambeam["mask_with_filling_pattern"]["i_bunch_b2"] = 696
 # Set this variable to False if you intend to scan the bunch number (but ensure both bunches indices
 # are defined later)
 check_bunch_number = True
@@ -262,7 +263,7 @@ d_config_collider["config_beambeam"] = d_config_beambeam
 d_config_simulation = {}
 
 # Number of turns to track
-d_config_simulation["n_turns"] = 200
+d_config_simulation["n_turns"] = 1000000
 
 # Initial off-momentum
 d_config_simulation["delta_max"] = 27.0e-5
@@ -276,8 +277,8 @@ d_config_simulation["beam"] = "lhcb1"
 # Below, the user chooses if the gen 2 collider must be dumped, along with the corresponding
 # configuration.
 # ==================================================================================================
-dump_collider = False
-dump_config_in_collider = False
+dump_collider = True
+dump_config_in_collider = True
 
 # ==================================================================================================
 # --- Machine parameters being scanned (generation 2)
@@ -355,7 +356,7 @@ for idx_job, (track, qx, qy) in enumerate(itertools.product(track_array, array_q
     children["base_collider"]["children"][f"xtrack_{idx_job:04}"] = {
         "config_simulation": copy.deepcopy(d_config_simulation),
         "config_collider": copy.deepcopy(d_config_collider),
-        "log_file": "tree_maker.log",
+        "log_file": f"tree_maker.log",
         "dump_collider": dump_collider,
         "dump_config_in_collider": dump_config_in_collider,
     }
@@ -376,7 +377,7 @@ config["root"]["setup_env_script"] = os.getcwd() + "/../miniforge/bin/activate"
 # --- Build tree and write it to the filesystem
 # ==================================================================================================
 # Define study name
-study_name = "example_tunescan"
+study_name = config['root']["study_name"]
 
 # Creade folder that will contain the tree
 if not os.path.exists("scans/" + study_name):

@@ -15,8 +15,10 @@ import logging
 print("Analysis of output simulation files started")
 start = time.time()
 
+config = yaml.safe_load(open("config.yaml"))
+study_name = config['root']['study_name']
+
 # Load Data
-study_name = "example_tunescan"
 fix = "/scans/" + study_name
 root = tree_maker.tree_from_json(fix[1:] + "/tree_maker_" + study_name + ".json")
 # Add suffix to the root node path to handle scans that are not in the root directory

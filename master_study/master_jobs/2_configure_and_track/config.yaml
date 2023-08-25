@@ -5,12 +5,12 @@ config_collider:
     knob_settings:
 
       # Exp. configuration in IR1, IR2, IR5 and IR8***
-      on_x1   : 170.0
+      on_x1   : -170.0
       on_sep1 : 0.0 #-1.187  
 
       on_x2h  : 0.000  
-      on_sep2h: 0.1401 # 2.382  
-      on_x2v  : -350.0  
+      on_sep2h: 0.1401 #   
+      on_x2v  : 300.0  
       on_sep2v: 0.000 
       on_a2   : 0.000
 
@@ -29,11 +29,11 @@ config_collider:
       on_disp  : 1.000 
 
       # Magnets of the experiments
-      on_alice_normalized: 1
+      on_alice_normalized: -1
       on_lhcb_normalized: -1
       on_sol_atlas: 1
       on_sol_cms: 1
-      on_sol_alice: 1
+      on_sol_alice: -1
 
       # RF voltage and phases
       vrf400: 12.0 # [MV]
@@ -91,11 +91,11 @@ config_collider:
       ip5: 25
       ip8: 20
     sigma_z: 0.09 # 0.0761, increased for the TDIS
-    num_particles_per_bunch: 1.6E+11
+    num_particles_per_bunch: 1.4E+11
     nemitt_x: 2.2E-6
     nemitt_y: 2.2E-6
     mask_with_filling_pattern:
-      pattern_fname: ../filling_scheme/25ns_2228b_2216_1686_2112_hybrid_8b4e_2x56b_25ns_3x48b_12inj.json
+      pattern_fname: ../filling_scheme/25ns_2358b_2345_1692_1628_236bpi_14inj_hybrid_2INDIV.json
       i_bunch_b1: 1148 # If not specified, the bunch with the worst schedule is chosen
       i_bunch_b2: 1145 # Same. A value for i_bunch_b1 and i_bunch_b2 must be specified if pattern_fname is specified
 

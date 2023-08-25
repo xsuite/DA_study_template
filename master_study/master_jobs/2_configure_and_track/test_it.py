@@ -6,7 +6,10 @@ import matplotlib.pyplot as plt
 #import configure_and_track as configure_and_track
 
 # %%
-collider = xt.Multiline.from_json('collider.json')
+#collider = xt.Multiline.from_json('../collider.json')
+collider = xt.Multiline.from_json('/home/sterbini/2023_07_17_pp_reference_run/example_DA_study/master_study/scans/test/base_collider/xtrack_0000/collider.json')
+
+
 collider['lhcb1'].twiss_default['matrix_stability_tol'] = 100
 collider['lhcb2'].twiss_default['matrix_stability_tol'] = 100
 
@@ -32,12 +35,12 @@ collider.survey_b2 = survey_b2
 # %% filling scheme computation
 # import a yaml file in a dictionary
 import yaml
-with open('config.yaml') as file:
+with open('/home/sterbini/2023_07_17_pp_reference_run/example_DA_study/master_study/scans/test/base_collider/xtrack_0000/config.yaml') as file:
     config = yaml.safe_load(file)
 config_sim = config['config_simulation']
 config_collider = config['config_collider']
 
-with open('../1_build_distr_and_collider/config.yaml') as file:
+with open('/home/sterbini/2023_07_17_pp_reference_run/example_DA_study/master_study/scans/test/base_collider/config.yaml') as file:
     config_generation_1 = yaml.safe_load(file)
 config_mad = config_generation_1['config_mad']
 
@@ -122,7 +125,6 @@ plt.plot(tw_b1_temp.s-tw_b1_temp['s',f'ip{ip}'], tw_b1_temp.y, 'bo-')
 plt.xlim(-25,25)
 
 # %%
-collider.vars['on_disp'] = 1
 twiss_b1 = collider['lhcb1'].twiss()
 twiss_b2 = collider['lhcb2'].twiss().reverse()
 
@@ -143,12 +145,12 @@ for ii in config_collider['config_knobs_and_tuning']['knob_settings'].keys():
     if len(collider.vars[ii]._find_dependant_targets())==1:
         print(ii)
 # %% Some plots
-collider.vars['on_alice_normalized'] = 1
-collider.vars['on_lhcb_normalized'] = -1
-collider.vars['beambeam_scale'] = 1
-collider.vars['on_x8h'] = -170
-collider.vars['on_x2v'] = -350
-collider.vars['on_sep2h'] = .1401
+# collider.vars['on_alice_normalized'] = 1
+# collider.vars['on_lhcb_normalized'] = -1
+# collider.vars['beambeam_scale'] = 1
+# collider.vars['on_x8h'] = -170
+# collider.vars['on_x2v'] = -350
+# collider.vars['on_sep2h'] = .1401
 
 import numpy as np
 from scipy import constants
@@ -289,6 +291,14 @@ for my_ip in ['ip1','ip2','ip5','ip8']:
 # %% Compute the luminosity
 
 from xtrack import lumi
+# IP1 is levelled at pileup = 4
+# IP2 is levelled at lumi = 1.25e31 cm-2s-1
+# IP5 is head-on
+# IP8 is levelled at pileup = 1 # decided a bit arbitrary
+collider.vars['on_sep1'] = - 0.0215
+collider.vars['on_sep2h'] = .164
+collider.vars['on_sep8v'] = -0.055
+
 def compute_luminosity(collider, ip='ip1', sigma_tot = 81e-27, crab=False, matrix_stability_tol=1.01, verbose=True):
     '''
     Compute the LHC luminosity in cm^-2 s^-1 and the multiplicity in a given IP
@@ -332,10 +342,22 @@ def compute_luminosity(collider, ip='ip1', sigma_tot = 81e-27, crab=False, matri
         print(f'Pile-up: {my_pileup:.2e}')
         print(f'Number of colliding bunches in {ip}: {colliding_bunches}')
         print(f'Number of particles per bunch: {collider.config["config_beambeam"]["num_particles_per_bunch"]:.2e}') 
+        if ip == 'ip1':
+            for param in ['on_x1', 'on_sep1', 'phi_ir1']:
+                print(f'{param}: {collider.vars[param]._value:.4f}')
+        
+        if ip == 'ip5':
+            for param in ['on_x5', 'on_sep5','phi_ir5']:
+                print(f'{param}: {collider.vars[param]._value:.4f}')
+        
         if ip == 'ip2':
+            for param in ['on_x2h', 'on_x2v','on_sep2h', 'on_sep2v']:
+                print(f'{param}: {collider.vars[param]._value:.4f}')
             print(f'ALICE polarity: {collider.vars["on_alice_normalized"]._value:.0f} ')
         if ip == 'ip8':
-                print(f'LHCb polarity: {collider.vars["on_lhcb_normalized"]._value:.0f}')
+            for param in ['on_x8h', 'on_x8v','on_sep8h', 'on_sep8v']:
+                print(f'{param}: {collider.vars[param]._value:.4f}')
+            print(f'LHCb polarity: {collider.vars["on_lhcb_normalized"]._value:.0f}')
 
         print('\n')
     return my_luminosity, my_pileup
@@ -352,7 +374,7 @@ fp1 = collider['lhcb1'].get_footprint(nemitt_x = collider.config['config_beambea
                                       nemitt_y = collider.config['config_beambeam']['nemitt_y'],
                                       freeze_longitudinal=True, 
                                       n_turns=2048, 
-                                      n_fft=2048, 
+                                      n_fft=2000000, 
                                       delta0=0, 
                                       zeta0=0)
 # %%
@@ -685,7 +707,7 @@ fp1 = get_footprint(collider['lhcb1'],
                     n_r =11,
                     n_theta=11,
                     n_turns=1024, 
-                    n_fft=1024, 
+                    n_fft=1024000, 
                     delta0=0, 
                     zeta0=0,
                     mode='polar',)
@@ -710,10 +732,10 @@ qy_sussix = []
 
 for ii in range(my_len):   
     signal = fp1.mon.x[ii,:]
-    qx_pynaff.append(pnf.naff(signal, fp1.n_turns, 1, 0 , False)[0][1])
+    # qx_pynaff.append(pnf.naff(signal, fp1.n_turns, 1, 0 , False)[0][1])
     qx_nafflib.append(NAFFlib.get_tune(signal))
     signal = fp1.mon.y[ii,:]
-    qy_pynaff.append(pnf.naff(signal, fp1.n_turns, 1, 0 , False)[0][1])
+    # qy_pynaff.append(pnf.naff(signal, fp1.n_turns, 1, 0 , False)[0][1])
     qy_nafflib.append(NAFFlib.get_tune(signal))
 
     my_sussix = PySussix.Sussix()
@@ -734,7 +756,7 @@ for ii in range(my_len):
 fp1.plot(color='b',linewidth=0, marker='o', markersize=3)
 
 plt.plot(qx_nafflib, qy_nafflib,'+r')
-plt.plot(qx_pynaff, qy_pynaff,'.k')
+#plt.plot(qx_pynaff, qy_pynaff,'.k')
 plt.plot(qx_sussix, qy_sussix,'xm')
 
 plt.plot([.29,.32],[.29,.32],'-')
@@ -771,7 +793,7 @@ on_sep2h_range = np.linspace(-3.5, 0, duration +1)
 
 on_x2v_linear = interp1d(t, on_x2v_range) 
 on_sep2h_linear = interp1d(t, on_sep2h_range)
-
+collider.vars["on_alice_normalized"] = 1
 
  
 # matplot subplot
@@ -786,6 +808,12 @@ def make_frame(t):
     on_sep2h = on_sep2h_linear(t) 
     collider.vars['on_x2v'] = on_x2v
     collider.vars['on_sep2h'] = on_sep2h
+    collider.configure_beambeam_interactions(config_collider['config_beambeam']['num_particles_per_bunch'],
+                                             config_collider['config_beambeam']['nemitt_x'],
+                                             config_collider['config_beambeam']['nemitt_y'],
+                                             crab_strong_beam=False,)
+    collider.vars['beambeam_scale'] = 1
+
     my_dict = compute_separation(collider, ip='ip2')
     ip_dict = my_dict
     ax.plot(ip_dict['s'], np.abs(ip_dict['dx_sig']), 'ob', label='x')
@@ -794,6 +822,63 @@ def make_frame(t):
     ax.set_ylabel('separation [$\sigma$]')
     ax.legend(loc='upper right')
     ax.grid(True)
+    # plot_orbits(my_dict)
+    # ax = plt.gca()
+    # ax.set_title(f'on_x2v={on_x2v}, on_sep2h={on_sep2h}')
+    # plot_separation(my_dict)
+    # ax = plt.gca()
+    ax.set_ylim(8, 10)
+    ax.set_title(f'on_x2v={on_x2v:.1f}, on_sep2h={on_sep2h:.2f}, ALICE polarity = {collider.vars["on_alice_normalized"]._value}')
+    # returning numpy image
+    return mplfig_to_npimage(fig)
+ 
+# creating animation
+animation = VideoClip(make_frame, duration = duration+1)
+ 
+# displaying animation with auto play and looping
+animation.ipython_display(fps = 1, loop = True, autoplay = True)
+# %%
+
+fig, ax = plt.subplots()
+ 
+# method to get frames
+def make_frame(t):
+     
+    # clear
+    ax.clear()
+    on_x2v =on_x2v_linear(t)
+    on_sep2h = on_sep2h_linear(t) 
+    collider.vars['on_x2v'] = on_x2v
+    collider.vars['on_sep2h'] = on_sep2h
+    my_dict = compute_separation(collider, ip='ip2')
+    ip_dict = my_dict
+
+    ax.plot(my_dict['twiss_filtered']['b1']['s'], 
+            my_dict['twiss_filtered']['b1']['x']
+            +my_dict['survey_filtered']['b1']['X'],
+            'ob-', label='B1 x'
+    )
+    ax.plot(my_dict['twiss_filtered']['b2']['s'], 
+            my_dict['twiss_filtered']['b2']['x']
+            +my_dict['survey_filtered']['b2']['X'],
+            'or-', label='B2 x'
+    )
+
+    ax.plot(my_dict['twiss_filtered']['b1']['s'], 
+            my_dict['twiss_filtered']['b1']['y'],
+            'ob:', label='B1 y'
+    )
+    ax.plot(my_dict['twiss_filtered']['b2']['s'], 
+            my_dict['twiss_filtered']['b2']['y'],
+            'or:', label='B2 y'
+    )
+
+
+    ax.set_xlabel('s [m]')
+    ax.set_ylabel('separation [$\sigma$]')
+    ax.legend(loc='upper right')
+    ax.grid(True)
+
     # plot_orbits(my_dict)
     # ax = plt.gca()
     # ax.set_title(f'on_x2v={on_x2v}, on_sep2h={on_sep2h}')
@@ -808,4 +893,5 @@ animation = VideoClip(make_frame, duration = duration+1)
  
 # displaying animation with auto play and looping
 animation.ipython_display(fps = 1, loop = True, autoplay = True)
+
 # %%

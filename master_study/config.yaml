@@ -1,4 +1,5 @@
 'root':
+  study_name: 'IP1_2_8_levelled'
   setup_env_script: 'none'
   generations:
     1: # Build the particle distribution and base collider
