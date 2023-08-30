@@ -66,8 +66,6 @@ for node in root.generation(1):
         # Get scanned parameters (complete with the requested scanned parameters)
         df_sim["qx"] = dic_child_collider["config_knobs_and_tuning"]["qx"]["lhcb1"]
         df_sim["qy"] = dic_child_collider["config_knobs_and_tuning"]["qy"]["lhcb1"]
-        df_sim["dqx"] = dic_child_collider["config_knobs_and_tuning"]["dqx"]["lhcb1"]
-        df_sim["dqy"] = dic_child_collider["config_knobs_and_tuning"]["dqy"]["lhcb1"]
         df_sim["i_bunch_b1"] = dic_child_collider["config_beambeam"]["mask_with_filling_pattern"][
             "i_bunch_b1"
         ]
@@ -76,6 +74,12 @@ for node in root.generation(1):
         ]
         df_sim["num_particles_per_bunch"] = dic_child_collider["config_beambeam"][
             "num_particles_per_bunch"
+        ]
+        df_sim["i_oct_b1"] = dic_child_collider["config_knobs_and_tuning"]["knob_settings"][
+            "i_oct_b1"
+        ]
+        df_sim["i_oct_b2"] = dic_child_collider["config_knobs_and_tuning"]["knob_settings"][
+            "i_oct_b2"
         ]
 
         # Merge with particle data
@@ -104,11 +108,11 @@ l_parameters_to_keep = [
     "normalized amplitude in xy-plane",
     "qx",
     "qy",
-    "dqx",
-    "dqy",
     "i_bunch_b1",
     "i_bunch_b2",
     "num_particles_per_bunch",
+    "i_oct_b1",
+    "i_oct_b2",
 ]
 
 # Min is computed in the groupby function, but values should be identical
