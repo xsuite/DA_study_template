@@ -114,7 +114,7 @@ if df_lost_particles.empty:
     print("No unstable particles found, the output dataframe will be empty.")
 
 # Group by working point (Update this with the knobs you want to group by !)
-group_by_parameters = ["name base collider", "qx", "qy", "i_oct_b1", "i_oct_b2", "crossing_angle"]
+group_by_parameters = ["name base collider", "qx", "qy"]
 # We always want to keep beam in the final result
 group_by_parameters = ["beam"] + group_by_parameters
 l_parameters_to_keep = [
