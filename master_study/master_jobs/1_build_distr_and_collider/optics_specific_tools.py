@@ -1,4 +1,3 @@
-from xmask.lhc import install_errors_placeholders_hllhc
 import numpy as np
 
 
