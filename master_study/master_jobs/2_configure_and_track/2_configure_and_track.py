@@ -17,15 +17,16 @@ import numpy as np
 import pandas as pd
 import ruamel.yaml
 import tree_maker
-
-# Import user-defined modules
+import xmask.lhc as xlhc
 import xmask as xm
 import xobjects as xo
+
+# Import user-defined modules
+
 import xtrack as xt
 from misc import (
     compute_PU,
     generate_orbit_correction_setup,
-    do_levelling,
 )
 
 # Initialize yaml reader
@@ -213,22 +214,20 @@ def do_levelling(
     except:
         print("Leveling failed..continuing")
     
-
     # Update configuration
     config_bb["num_particles_per_bunch_before_optimization"] = float(config_bb["num_particles_per_bunch"])
-    config_collider["config_lumi_leveling"]["ip2"]["final_on_sep2h"] = float(
-        collider.vars["on_sep2h"]._value
+    config_collider["config_lumi_leveling"]["ip1"]["final_on_sep1"] = float(
+        collider.vars["on_sep1"]._value
     )
-    config_collider["config_lumi_leveling"]["ip2"]["final_on_sep2v"] = float(
-        collider.vars["on_sep2v"]._value
+    config_collider["config_lumi_leveling"]["ip2"]["final_on_sep2"] = float(
+        collider.vars["on_sep2"]._value
     )
-    config_collider["config_lumi_leveling"]["ip8"]["final_on_sep8h"] = float(
-        collider.vars["on_sep8h"]._value
+    config_collider["config_lumi_leveling"]["ip5"]["final_on_sep5"] = float(
+        collider.vars["on_sep5"]._value
     )
-    config_collider["config_lumi_leveling"]["ip8"]["final_on_sep8v"] = float(
-        collider.vars["on_sep8v"]._value
+    config_collider["config_lumi_leveling"]["ip8"]["final_on_sep8"] = float(
+        collider.vars["on_sep8"]._value
     )
-
     return collider, config_collider
 
 

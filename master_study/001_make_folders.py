@@ -109,7 +109,7 @@ d_config_knobs["on_sep2"] = 1e-3
 d_config_knobs["on_x5"] = 170
 d_config_knobs["on_sep5"] = 1e-3
 d_config_knobs["on_x8"] = -170
-d_config_knobs["on_sep8"] = 1e-3
+d_config_knobs["on_sep8"] = 1e-8
 d_config_knobs["on_disp"] = 1
 
 d_config_knobs["on_alice_normalized"] = -1
@@ -152,7 +152,7 @@ d_config_beambeam["nemitt_y"] = 1.65e-6
 # The scheme should consist of a json file containing two lists of booleans (one for each beam),
 # representing each bucket of the LHC.
 filling_scheme_path = os.path.abspath(
-    "master_jobs/filling_scheme/50ns_160b_160_80_73_40bpi_PbPb_BBMD.json"
+    "master_jobs/filling_scheme/50ns_961b_880_880_209_40bpi_25inj_PbPb.json"
 )
 
 # Alternatively, one can get a fill directly from LPC from, e.g.:
