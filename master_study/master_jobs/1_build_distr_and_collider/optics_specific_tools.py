@@ -21,7 +21,7 @@ def check_madx_lattices(mad):
 
         assert df["x"].std() < 1e-8
         assert df["y"].std() < 1e-8
-    except:
+    except AssertionError:
         print("WARNING: Some sanity checks have failed during the madx lattice check")
 
 
