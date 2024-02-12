@@ -17,12 +17,11 @@ import numpy as np
 import pandas as pd
 import ruamel.yaml
 import tree_maker
-import xmask.lhc as xlhc
 import xmask as xm
+import xmask.lhc as xlhc
 import xobjects as xo
 
 # Import user-defined modules
-
 import xtrack as xt
 from misc import (
     compute_PU,
@@ -189,14 +188,14 @@ def compute_collision_from_scheme(config_bb):
 # --- Function to do the Levelling
 # ==================================================================================================
 def do_levelling(
-            config_collider,
-            config_bb,
-            n_collisions_ip2,
-            n_collisions_ip8,
-            collider,
-            n_collisions_ip1_and_5,
-            crab=False
-            ):
+    config_collider,
+    config_bb,
+    n_collisions_ip2,
+    n_collisions_ip8,
+    collider,
+    n_collisions_ip1_and_5,
+    crab=False,
+):
     # Read knobs and tuning settings from config file (already updated with the number of collisions)
     config_lumi_leveling = config_collider["config_lumi_leveling"]
 
@@ -209,13 +208,15 @@ def do_levelling(
     # Level by separation
     try:
         xlhc.luminosity_leveling(
-        collider, config_lumi_leveling=config_lumi_leveling,
-        config_beambeam=config_bb)
+            collider, config_lumi_leveling=config_lumi_leveling, config_beambeam=config_bb
+        )
     except:
         print("Leveling failed..continuing")
-    
+
     # Update configuration
-    config_bb["num_particles_per_bunch_before_optimization"] = float(config_bb["num_particles_per_bunch"])
+    config_bb["num_particles_per_bunch_before_optimization"] = float(
+        config_bb["num_particles_per_bunch"]
+    )
     config_collider["config_lumi_leveling"]["ip1"]["final_on_sep1"] = float(
         collider.vars["on_sep1"]._value
     )
@@ -229,7 +230,6 @@ def do_levelling(
         collider.vars["on_sep8"]._value
     )
     return collider, config_collider
-
 
 
 # ==================================================================================================
@@ -535,8 +535,8 @@ def track(collider, particles, config_sim, save_input_particles=False):
     # Get beam being tracked
     beam = config_sim["beam"]
 
-    # Optimize line for tracking (not working for now)
-    # collider[beam].optimize_for_tracking()
+    # Optimize line for tracking
+    collider[beam].optimize_for_tracking()
 
     # Save initial coordinates if requested
     if save_input_particles:
