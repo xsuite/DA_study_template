@@ -6,11 +6,13 @@ config_collider:
       on_x1: 170 # [urad]
       on_sep1: 1e-3 # [mm]
       on_x2: -170 # [urad]
-      on_sep2: 1e-3 # [mm]
+      on_sep2h: 1e-3 # [mm]
+      on_sep2v: 0 # [mm]
       on_x5: 170 # [urad]
       on_sep5: 1e-3 # [mm]
       on_x8: -135 # [urad]
-      on_sep8: 1e-8 # [mm]
+      on_sep8h: 0 # [mm]
+      on_sep8v: 1e-8 # [mm]
       on_ov2: 0 # [mm]
       on_ov5: 0 # [mm]
 
@@ -154,7 +156,7 @@ config_collider:
       num_colliding_bunches: 1088
       impose_separation_orthogonal_to_crossing: false
       knobs:
-        - on_sep2
+        - on_sep2h
       bump_range:
         lhcb1:
           - e.ds.l2.b1
@@ -185,7 +187,7 @@ config_collider:
       num_colliding_bunches: 398
       impose_separation_orthogonal_to_crossing: false
       knobs:
-        - on_sep8
+        - on_sep8v
       bump_range:
         lhcb1:
           - e.ds.l8.b1
