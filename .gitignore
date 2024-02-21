@@ -19,6 +19,7 @@ master_study/master_jobs/filling_scheme/custom_schemes/*
 # Scans
 #master_study/scans/*
 *.parquet
+*.json
 !master_study/scans/.gitkeep
 
 # Analysis
