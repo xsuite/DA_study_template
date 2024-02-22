@@ -17,7 +17,7 @@ config_collider:
       on_ov5: 0 # [mm]
 
       # Spurious dispersion correction
-      on_disp: 0 # Value to choose could be optics-dependent
+      on_disp: 0     # Value to choose could be optics-dependent
 
       # Magnets of the experiments
       on_alice_normalized: 1
@@ -32,8 +32,8 @@ config_collider:
       lagrf400.b2: 0. # [rad]
 
       # Octupoles
-      i_oct_b1: 100. # [A]
-      i_oct_b2: 100. # [A]
+      i_oct_b1: 100.0 # [A]
+      i_oct_b2: 100.0 # [A]
 
     closed_orbit_correction:
       lhcb1: correction/corr_co_lhcb1.json
@@ -44,8 +44,8 @@ config_collider:
       lhcb1: 62.305
       lhcb2: 62.305
     qy:
-      lhcb1: 60.315
-      lhcb2: 60.315
+      lhcb1: 62.315
+      lhcb2: 62.315
     dqx:
       lhcb1: 10.0
       lhcb2: 10.0
@@ -83,7 +83,7 @@ config_collider:
       ip5: 25
       ip8: 20
     sigma_z: 0.0824
-    num_particles_per_bunch: 1.8e8
+    num_particles_per_bunch: 180000000.0
     nemitt_x: 1.65e-6
     nemitt_y: 1.65e-6
     mask_with_filling_pattern:
@@ -92,20 +92,11 @@ config_collider:
       i_bunch_b1: 3173 # If not specified, the bunch with the worst schedule is chosen
       i_bunch_b2: 496 # Same. A value for i_bunch_b1 and i_bunch_b2 must be specified if pattern_fname is specified
 
-    num_particles_per_bunch_before_optimization: 180000000.0
-    luminosity_ip1_after_optimization: 3.4650552747952506e+25
-    Pile-up_ip1_after_optimization: 2.836179981405963e-07
-    luminosity_ip2_after_optimization: 3.4734975723933985e+25
-    Pile-up_ip2_after_optimization: 2.8430900805374555e-07
-    luminosity_ip5_after_optimization: 3.4733440824337834e+25
-    Pile-up_ip5_after_optimization: 2.8429644475774354e-07
-    luminosity_ip8_after_optimization: 3.9416144357869167e+24
-    Pile-up_ip8_after_optimization: 1.3584202478313465e-07
   skip_leveling: false
   config_lumi_leveling:
     ip1:
-      luminosity: 0.0035e+28
-      num_colliding_bunches: 880
+      luminosity: 3.5e+25
+      num_colliding_bunches:
       impose_separation_orthogonal_to_crossing: false
       knobs:
       - on_sep1
@@ -132,10 +123,9 @@ config_collider:
       - corr_co_acbcv5.r1b2
       - corr_co_acbch5.l1b2
 
-      final_on_sep1: 0.03853395530440422
     ip5:
-      luminosity: 0.0035e+28
-      num_colliding_bunches: 880
+      luminosity: 3.5e+25
+      num_colliding_bunches:
       impose_separation_orthogonal_to_crossing: false
       knobs:
       - on_sep5
@@ -162,10 +152,9 @@ config_collider:
       - corr_co_acbyvs4.l5b2
       - corr_co_acbyvs4.r5b2
 
-      final_on_sep5: 0.038588277695542156
     ip2:
-      luminosity: 0.0035e+28
-      num_colliding_bunches: 880
+      luminosity: 3.5e+25
+      num_colliding_bunches:
       impose_separation_orthogonal_to_crossing: false
       knobs:
       - on_sep2h
@@ -194,10 +183,9 @@ config_collider:
       - corr_co_acbchs5.r2b1
       - corr_co_acbcvs5.r2b1
 
-      final_on_sep2: 0.0
     ip8:
-      luminosity: 0.0004e+28
-      num_colliding_bunches: 209
+      luminosity: 4e+24
+      num_colliding_bunches:
       impose_separation_orthogonal_to_crossing: false
       knobs:
       - on_sep8v
@@ -226,8 +214,7 @@ config_collider:
       - corr_co_acbyvs5.r8b1
       - corr_co_acbyhs5.r8b1
 
-      # Configuration for the track job
-      final_on_sep8: 0.0
+# Configuration for the track job
 config_simulation:
   # Collider file
   collider_file: ../collider/collider.json
@@ -239,17 +226,17 @@ config_simulation:
   delta_max: 0.00024
 
   # Tracking
-  n_turns: 200 # number of turns to track
+  n_turns: 200  # number of turns to track
 
   # Beam to track
-  beam: lhcb1 #lhcb1 or lhcb2
+  beam: lhcb1   #lhcb1 or lhcb2
 
 # Save collider or not
 dump_collider: true
 dump_config_in_collider: true
 
 # Context for the simulation
-context: cpu # 'cupy' # opencl
+context: cpu   # 'cupy' # opencl
 
 # Log
 log_file: tree_maker.log

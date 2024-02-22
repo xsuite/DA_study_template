@@ -63,7 +63,7 @@ d_config_mad["ver_lhc_run"] = 3.0
 
 
 # Beam energy (for both beams)
-beam_energy_tot = 7000 * 82
+beam_energy_tot = 6800 * 82
 d_config_mad["beam_config"]["lhcb1"]["beam_energy_tot"] = beam_energy_tot
 d_config_mad["beam_config"]["lhcb2"]["beam_energy_tot"] = beam_energy_tot
 
@@ -102,22 +102,24 @@ d_config_tune_and_chroma["delta_cmi"] = 0.0
 d_config_knobs = {}
 
 # Knobs at IPs
-d_config_knobs["on_x1"] = 70
+d_config_knobs["on_x1"] = 170
 d_config_knobs["on_sep1"] = 1e-3
-d_config_knobs["on_x2"] = 130
-d_config_knobs["on_sep2"] = 1e-3
-d_config_knobs["on_x5"] = 70
+d_config_knobs["on_x2"] = -170
+d_config_knobs["on_sep2h"] = 1e-3
+d_config_knobs["on_sep2v"] = 0
+d_config_knobs["on_x5"] = 170
 d_config_knobs["on_sep5"] = 1e-3
-d_config_knobs["on_x8"] = -70
-d_config_knobs["on_sep8"] = 1e-8
+d_config_knobs["on_x8"] = -135
+d_config_knobs["on_sep8v"] = 1e-8
+d_config_knobs["on_sep8h"] = 0
 d_config_knobs["on_disp"] = 0
 
 d_config_knobs["on_alice_normalized"] = 1
 d_config_knobs["on_lhcb_normalized"] = -1
 
 # Octupoles
-d_config_knobs["i_oct_b1"] = 250.0
-d_config_knobs["i_oct_b2"] = 250.0
+d_config_knobs["i_oct_b1"] = 100.0
+d_config_knobs["i_oct_b2"] = 100.0
 
 ### leveling configuration
 
@@ -133,10 +135,10 @@ d_config_leveling = {
 
 
 # Leveling parameters (ignored if skip_leveling is True)
-d_config_leveling["ip1"]["luminosity"] = 6.4e27
-d_config_leveling["ip2"]["luminosity"] = 6.4e27
-d_config_leveling["ip5"]["luminosity"] = 6.4e27
-d_config_leveling["ip8"]["luminosity"] = 1.0e27
+d_config_leveling["ip1"]["luminosity"] = 0.0035e+28
+d_config_leveling["ip2"]["luminosity"] = 0.0035e+28
+d_config_leveling["ip5"]["luminosity"] = 0.0035e+28
+d_config_leveling["ip8"]["luminosity"] = 0.0004e+28
 
 ### Beam beam configuration
 
@@ -144,7 +146,7 @@ d_config_leveling["ip8"]["luminosity"] = 1.0e27
 d_config_beambeam = {"mask_with_filling_pattern": {}}
 
 # Beam settings
-d_config_beambeam["num_particles_per_bunch"] = 14e12
+d_config_beambeam["num_particles_per_bunch"] = 1.8e8
 d_config_beambeam["nemitt_x"] = 1.65e-6
 d_config_beambeam["nemitt_y"] = 1.65e-6
 
@@ -275,8 +277,8 @@ dump_config_in_collider = True
 # optimal DA (e.g. tune, chroma, etc).
 # ==================================================================================================
 # Scan tune with step of 0.001 (need to round to correct for numpy numerical instabilities)
-array_qx = np.round(np.arange(62.305, 62.330, 0.001), decimals=4)[:1]
-array_qy = np.round(np.arange(60.305, 60.330, 0.001), decimals=4)[:1]
+array_qx = [62.305]
+array_qy = [62.315]
 
 # In case one is doing a tune-tune scan, to decrease the size of the scan, we can ignore the
 # working points too close to resonance. Otherwise just delete this variable in the loop at the end
@@ -366,7 +368,7 @@ set_context(children, 1, config)
 # --- Build tree and write it to the filesystem
 # ==================================================================================================
 # Define study name
-study_name = "MD2024"
+study_name = "MD2024_clean"
 
 # Creade folder that will contain the tree
 if not os.path.exists("scans/" + study_name):
