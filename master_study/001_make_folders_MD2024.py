@@ -278,7 +278,7 @@ dump_config_in_collider = True
 # ==================================================================================================
 # Scan tune with step of 0.001 (need to round to correct for numpy numerical instabilities)
 array_qx = [62.305]
-array_qy = [62.315]
+array_qy = [60.315]
 
 # In case one is doing a tune-tune scan, to decrease the size of the scan, we can ignore the
 # working points too close to resonance. Otherwise just delete this variable in the loop at the end
