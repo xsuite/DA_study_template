@@ -162,8 +162,9 @@ d_config_beambeam["nemitt_y"] = 2.5e-6
 # The scheme should consist of a json file containing two lists of booleans (one for each beam),
 # representing each bucket of the LHC.
 filling_scheme_path = os.path.abspath(
-    "master_jobs/filling_scheme/25ns_2464b_2452_1842_1821_236bpi_12inj_hybrid.json"
+    "master_jobs/filling_scheme/25ns_2604b_2592_2310_2421_4x48bpi_16inj.json"
 )
+
 
 # Alternatively, one can get a fill directly from LPC from, e.g.:
 # https://lpc.web.cern.ch/cgi-bin/fillTable.py?year=2023
