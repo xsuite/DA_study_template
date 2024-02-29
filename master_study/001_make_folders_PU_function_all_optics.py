@@ -59,7 +59,7 @@ d_config_mad = {"beam_config": {"lhcb1": {}, "lhcb2": {}}, "links": {}}
 d_config_mad["links"]["acc-models-lhc"] = "../../../../modules/runIII"
 # ! updated later
 # d_config_mad["optics_file"] = "acc-models-lhc/RunIII_dev/Proton_2024/opticsfile.43"
-array_optics = [f"acc-models-lhc/RunIII_dev/Proton_2024/opticsfile.{x}" for x in range(43, 48)]
+array_optics = [f"acc-models-lhc/RunIII_dev/Proton_2024/opticsfile.{x}" for x in range(43, 49)]
 d_config_mad["ver_hllhc_optics"] = None
 d_config_mad["ver_lhc_run"] = 3.0
 
@@ -89,8 +89,8 @@ d_config_tune_and_chroma = {
     "dqy": {},
 }
 for beam in ["lhcb1", "lhcb2"]:
-    d_config_tune_and_chroma["qx"][beam] = # ! To be defined
-    d_config_tune_and_chroma["qy"][beam] = # ! To be defined
+    d_config_tune_and_chroma["qx"][beam] = 62.310
+    d_config_tune_and_chroma["qy"][beam] = 60.316
     d_config_tune_and_chroma["dqx"][beam] = 15.0
     d_config_tune_and_chroma["dqy"][beam] = 15.0
 
@@ -104,7 +104,7 @@ d_config_tune_and_chroma["delta_cmi"] = 0.0
 d_config_knobs = {}
 
 # Exp. configuration in IR1, IR2, IR5 and IR8
-d_config_knobs["on_x1"] = None # ! To be scanned # -160.000
+d_config_knobs["on_x1"] = None  # ! To be scanned # -160.000
 d_config_knobs["on_sep1"] = 0.0
 d_config_knobs["phi_IR1"] = 90.000
 
@@ -114,7 +114,7 @@ d_config_knobs["on_x2v"] = 200.000
 d_config_knobs["on_sep2v"] = 0.000
 d_config_knobs["phi_IR2"] = 90.000
 
-d_config_knobs["on_x5"] = None # ! To be scanned # 160.000
+d_config_knobs["on_x5"] = None  # ! To be scanned # 160.000
 d_config_knobs["on_sep5"] = 0.0
 d_config_knobs["phi_IR5"] = 0.000
 
@@ -132,7 +132,7 @@ d_config_knobs["i_oct_b2"] = 300.0
 
 # Leveling in IP 1/5
 skip_leveling = True
-d_config_leveling_ip1_5 = {"constraints": {}, "skip_leveling" : skip_leveling}
+d_config_leveling_ip1_5 = {"constraints": {}, "skip_leveling": skip_leveling}
 # d_config_leveling_ip1_5["luminosity"] = 2.0e34
 # d_config_leveling_ip1_5["constraints"]["max_intensity"] = 1.8e11
 # d_config_leveling_ip1_5["constraints"]["max_PU"] = 62
@@ -157,7 +157,7 @@ d_config_leveling["ip8"]["luminosity"] = 2.0e33
 d_config_beambeam = {"mask_with_filling_pattern": {}}
 
 # Beam settings
-d_config_beambeam["num_particles_per_bunch"] = None # ! Scanned
+d_config_beambeam["num_particles_per_bunch"] = None  # ! Scanned
 d_config_beambeam["nemitt_x"] = 2.5e-6
 d_config_beambeam["nemitt_y"] = 2.5e-6
 
@@ -292,7 +292,7 @@ dump_config_in_collider = False
 # optimal DA (e.g. tune, chroma, etc).
 # ==================================================================================================
 # Scan tune with step of 0.001 (need to round to correct for numpy numerical instabilities)
-array_angle = np.linspace(100,160,13)
+array_angle = np.linspace(100, 160, 13)
 array_nb = np.linspace(0.8, 1.4, 13) * 1e11
 
 
@@ -326,8 +326,9 @@ for idx_optics, optics in enumerate(array_optics):
     # ! otherwise the dictionnary will be mutated for all the children.
     # ==================================================================================================
     track_array = np.arange(d_config_particles["n_split"])
-    for idx_job, (track, angle, nb) in enumerate(itertools.product(track_array, array_angle, array_nb)):
-
+    for idx_job, (track, angle, nb) in enumerate(
+        itertools.product(track_array, array_angle, array_nb)
+    ):
         # Mutate the appropriate collider parameters
         for beam in ["lhcb1", "lhcb2"]:
             d_config_collider["config_knobs_and_tuning"]["knob_settings"]["on_x1"] = float(-angle)
