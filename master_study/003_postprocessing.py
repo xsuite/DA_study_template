@@ -110,7 +110,7 @@ df_all_sim = pd.concat(l_df_to_merge)
 print(df_all_sim)
 
 # Extract the particles that were lost for DA computation
-df_lost_particles = df_all_sim  # df_all_sim[df_all_sim["state"] != 1]  # Lost particles
+df_lost_particles = df_all_sim[df_all_sim["state"] != 1]  # Lost particles
 
 # Check if the dataframe is empty
 if df_lost_particles.empty:
