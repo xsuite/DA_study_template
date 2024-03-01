@@ -102,12 +102,12 @@ d_config_tune_and_chroma["delta_cmi"] = 0.0
 d_config_knobs = {}
 
 # Exp. configuration in IR1, IR2, IR5 and IR8
-d_config_knobs["on_x1"] = -160.000
+d_config_knobs["on_x1"] = 160.000
 d_config_knobs["on_sep1"] = 0.0
 d_config_knobs["phi_IR1"] = 90.000
 
 d_config_knobs["on_x2h"] = 0.000
-d_config_knobs["on_sep2h"] = 0.01  # 1.000
+d_config_knobs["on_sep2h"] = -0.01  # 1.000
 d_config_knobs["on_x2v"] = 200.000
 d_config_knobs["on_sep2v"] = 0.000
 d_config_knobs["phi_IR2"] = 90.000
@@ -191,9 +191,9 @@ else:
 
 
 # Add to config file
-d_config_beambeam["mask_with_filling_pattern"][
-    "pattern_fname"
-] = filling_scheme_path  # If None, a full fill is assumed
+d_config_beambeam["mask_with_filling_pattern"]["pattern_fname"] = (
+    filling_scheme_path  # If None, a full fill is assumed
+)
 
 # Initialize bunch number to None (will be set later)
 d_config_beambeam["mask_with_filling_pattern"]["i_bunch_b1"] = None
@@ -325,7 +325,6 @@ children["base_collider"]["config_mad"] = d_config_mad
 # ==================================================================================================
 track_array = np.arange(d_config_particles["n_split"])
 for idx_job, (track, qx, qy) in enumerate(itertools.product(track_array, array_qx, array_qy)):
-
     # Mutate the appropriate collider parameters
     for beam in ["lhcb1", "lhcb2"]:
         d_config_collider["config_knobs_and_tuning"]["qx"][beam] = float(qx)

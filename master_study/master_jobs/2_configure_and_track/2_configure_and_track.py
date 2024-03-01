@@ -1,6 +1,6 @@
 """This script is used to configure the collider and track the particles. Functions in this script
-are called sequentially, in the order in which they are defined. Modularity has been favored over 
-simple scripting for reproducibility, to allow rebuilding the collider from a different program 
+are called sequentially, in the order in which they are defined. Modularity has been favored over
+simple scripting for reproducibility, to allow rebuilding the collider from a different program
 (e.g. dahsboard)."""
 
 # ==================================================================================================
@@ -245,13 +245,21 @@ def do_levelling(
             additional_targets_lumi.append(target)
 
     # Then level luminosity in IP 2/8 changing the separation
-    collider = luminosity_leveling(
-        collider,
-        config_lumi_leveling=config_lumi_leveling,
-        config_beambeam=config_bb,
-        additional_targets_lumi=additional_targets_lumi,
-        crab=crab,
-    )
+    #! NASTY HACK TO MAXIMIZE LUMI IN IP8
+    while config_lumi_leveling["ip8"]["luminosity"] >= 0:
+        try:
+            collider = luminosity_leveling(
+                collider,
+                config_lumi_leveling=config_lumi_leveling,
+                config_beambeam=config_bb,
+                additional_targets_lumi=additional_targets_lumi,
+                crab=crab,
+            )
+        except Exception as e:
+            print(
+                f"Luminosity optimization failed with target {config_lumi_leveling['ip8']['luminosity']}."
+            )
+            config_lumi_leveling["ip8"]["luminosity"] -= 1e32
 
     # Update configuration
     config_bb["num_particles_per_bunch_before_optimization"] = float(initial_I)

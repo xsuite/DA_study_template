@@ -38,7 +38,7 @@ d_config_particles["n_r"] = 2 * 16 * (d_config_particles["r_max"] - d_config_par
 d_config_particles["n_angles"] = 5
 
 # Number of split for parallelization
-d_config_particles["n_split"] = 5
+d_config_particles["n_split"] = 1
 
 # ==================================================================================================
 # --- Optics collider parameters (generation 1)
@@ -102,12 +102,12 @@ d_config_tune_and_chroma["delta_cmi"] = 0.0
 d_config_knobs = {}
 
 # Exp. configuration in IR1, IR2, IR5 and IR8
-d_config_knobs["on_x1"] = -160.000
+d_config_knobs["on_x1"] = 160.000
 d_config_knobs["on_sep1"] = 0.0
 d_config_knobs["phi_IR1"] = 90.000
 
 d_config_knobs["on_x2h"] = 0.000
-d_config_knobs["on_sep2h"] = 0.01  # 1.000
+d_config_knobs["on_sep2h"] = -0.01  # 1.000
 d_config_knobs["on_x2v"] = 200.000
 d_config_knobs["on_sep2v"] = 0.000
 d_config_knobs["phi_IR2"] = 90.000
@@ -190,9 +190,9 @@ else:
 
 
 # Add to config file
-d_config_beambeam["mask_with_filling_pattern"][
-    "pattern_fname"
-] = filling_scheme_path  # If None, a full fill is assumed
+d_config_beambeam["mask_with_filling_pattern"]["pattern_fname"] = (
+    filling_scheme_path  # If None, a full fill is assumed
+)
 
 # Initialize bunch number to None (will be set later)
 d_config_beambeam["mask_with_filling_pattern"]["i_bunch_b1"] = None
