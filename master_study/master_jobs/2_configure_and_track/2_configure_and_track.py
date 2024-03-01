@@ -255,6 +255,7 @@ def do_levelling(
                 additional_targets_lumi=additional_targets_lumi,
                 crab=crab,
             )
+            break
         except Exception as e:
             print(
                 f"Luminosity optimization failed with target {config_lumi_leveling['ip8']['luminosity']}."
