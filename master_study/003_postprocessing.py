@@ -17,7 +17,7 @@ print("Analysis of output simulation files started")
 start = time.time()
 
 # Load Data
-study_name = "PU_function_all_optics"
+study_name = "example_tunescan"
 fix = "/scans/" + study_name
 root = tree_maker.tree_from_json(fix[1:] + "/tree_maker.json")
 # Add suffix to the root node path to handle scans that are not in the root directory
@@ -107,8 +107,6 @@ for node in root.generation(1):
 # Merge the dataframes from all simulations together
 df_all_sim = pd.concat(l_df_to_merge)
 
-print(df_all_sim)
-
 # Extract the particles that were lost for DA computation
 df_lost_particles = df_all_sim[df_all_sim["state"] != 1]  # Lost particles
 
@@ -117,9 +115,7 @@ if df_lost_particles.empty:
     print("No unstable particles found, the output dataframe will be empty.")
 
 # Group by working point (Update this with the knobs you want to group by !)
-# group_by_parameters = ["name base collider", "qx", "qy"]
-group_by_parameters = ["name base collider"]
-
+group_by_parameters = ["name base collider", "qx", "qy"]
 # We always want to keep beam in the final result
 group_by_parameters = ["beam"] + group_by_parameters
 l_parameters_to_keep = [
