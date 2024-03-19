@@ -112,7 +112,7 @@ d_config_knobs["on_sep5"] = 1e-3
 d_config_knobs["on_x8"] = -135
 d_config_knobs["on_sep8v"] = 1e-8
 d_config_knobs["on_sep8h"] = 0
-d_config_knobs["on_disp"] = 0
+d_config_knobs["on_disp"] = 1
 
 d_config_knobs["on_alice_normalized"] = 1
 d_config_knobs["on_lhcb_normalized"] = -1
@@ -368,7 +368,7 @@ set_context(children, 1, config)
 # --- Build tree and write it to the filesystem
 # ==================================================================================================
 # Define study name
-study_name = "MD2024_clean"
+study_name = "MD2024"
 
 # Creade folder that will contain the tree
 if not os.path.exists("scans/" + study_name):
