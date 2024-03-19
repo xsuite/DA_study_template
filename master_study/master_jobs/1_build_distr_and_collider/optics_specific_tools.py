@@ -87,8 +87,8 @@ def build_sequence(mad, mylhcbeam, beam_config, ignore_cycling=False, slice_fact
 def apply_optics(mad, optics_file):
     mad.call(optics_file)
     mad.call('ir7_strengths.madx')
-    mad.input('on_alice := on_alice_normalized * 7000./nrj;')
-    mad.input('on_lhcb := on_lhcb_normalized * 7000./nrj;')
+    mad.input('on_alice := on_alice_normalized * 7000. * 82. /nrj;')
+    mad.input('on_lhcb := on_lhcb_normalized * 7000. * 82. /nrj;')
 
 def _redefine_crossing_save_disable_restore(mad):
 
