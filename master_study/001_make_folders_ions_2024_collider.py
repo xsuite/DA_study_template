@@ -102,14 +102,14 @@ d_config_knobs = {}
 
 # Knobs at IPs
 d_config_knobs["on_x1"] = 170
-d_config_knobs["on_sep1"] = 0
-d_config_knobs["on_x2"] = -170
+d_config_knobs["on_sep1"] = 1e-3
+d_config_knobs["on_x2v"] = 170
 d_config_knobs["on_sep2h"] = 1e-3
 d_config_knobs["on_sep2v"] = 0
 d_config_knobs["on_x5"] = 170
-d_config_knobs["on_sep5"] = 0
-d_config_knobs["on_x8"] = -135
-d_config_knobs["on_sep8v"] = 1e-8
+d_config_knobs["on_sep5"] = 1e-3
+d_config_knobs["on_x8h"] = -170
+d_config_knobs["on_sep8v"] = 1e-3
 d_config_knobs["on_sep8h"] = 0
 d_config_knobs["on_disp"] = 1
 
@@ -134,10 +134,10 @@ d_config_leveling = {
 
 
 # Leveling parameters (ignored if skip_leveling is True)
-d_config_leveling["ip1"]["luminosity"] = 1.25e28
-d_config_leveling["ip2"]["luminosity"] = 1.25e28
-d_config_leveling["ip5"]["luminosity"] = 1.25e28
-d_config_leveling["ip8"]["luminosity"] = 0.1e28
+d_config_leveling["ip1"]["luminosity"] = 6.4e27
+d_config_leveling["ip2"]["luminosity"] = 6.4e27
+d_config_leveling["ip5"]["luminosity"] = 6.4e27
+d_config_leveling["ip8"]["luminosity"] = 1.4e27
 
 ### Beam beam configuration
 
@@ -145,7 +145,7 @@ d_config_leveling["ip8"]["luminosity"] = 0.1e28
 d_config_beambeam = {"mask_with_filling_pattern": {}}
 
 # Beam settings
-d_config_beambeam["num_particles_per_bunch"] = 7e7
+d_config_beambeam["num_particles_per_bunch"] = 1.8e8
 d_config_beambeam["nemitt_x"] = 2.2e-6
 d_config_beambeam["nemitt_y"] = 2.2e-6
 

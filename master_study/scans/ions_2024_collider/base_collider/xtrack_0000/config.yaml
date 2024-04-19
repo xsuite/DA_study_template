@@ -4,15 +4,15 @@ config_collider:
     knob_settings:
       # Orbit knobs
       on_x1: 170 # [urad]
-      on_sep1: 0 # [mm]
-      on_x2: -170 # [urad]
+      on_sep1: 0.001 # [mm]
+      on_x2: 170 # [urad]
       on_sep2h: 1e-3 # [mm]
       on_sep2v: 0 # [mm]
       on_x5: 170 # [urad]
-      on_sep5: 0 # [mm]
-      on_x8: -135 # [urad]
+      on_sep5: 0.001 # [mm]
+      on_x8: -170 # [urad]
       on_sep8h: 0 # [mm]
-      on_sep8v: 1e-8 # [mm]
+      on_sep8v: 0.001 # [mm]
       on_ov2: 0 # [mm]
       on_ov5: 0 # [mm]
 
@@ -35,6 +35,8 @@ config_collider:
       i_oct_b1: 100.0 # [A]
       i_oct_b2: 100.0 # [A]
 
+      on_x2v: 170
+      on_x8h: -170
     closed_orbit_correction:
       lhcb1: correction/corr_co_lhcb1.json
       lhcb2: correction/corr_co_lhcb2.json
@@ -83,7 +85,7 @@ config_collider:
       ip5: 25
       ip8: 20
     sigma_z: 0.0824
-    num_particles_per_bunch: 70000000.0
+    num_particles_per_bunch: 180000000.0
     nemitt_x: 2.2e-06
     nemitt_y: 2.2e-06
     mask_with_filling_pattern:
@@ -92,78 +94,69 @@ config_collider:
       i_bunch_b1: 492 # If not specified, the bunch with the worst schedule is chosen
       i_bunch_b2: 1377 # Same. A value for i_bunch_b1 and i_bunch_b2 must be specified if pattern_fname is specified
 
-    num_particles_per_bunch_before_optimization: 70000000.0
-    luminosity_ip1_after_optimization: 1.0129764810921133e+27
-    Pile-up_ip1_after_optimization: 4.2472625384231305e-06
-    luminosity_ip2_after_optimization: 1.0084250913431165e+27
-    Pile-up_ip2_after_optimization: 4.228179225493855e-06
-    luminosity_ip5_after_optimization: 1.0118492096690186e+27
-    Pile-up_ip5_after_optimization: 4.242536053874562e-06
-    luminosity_ip8_after_optimization: 1.4091308451616804e+26
-    Pile-up_ip8_after_optimization: 1.6151277900043758e-06
   skip_leveling: false
   config_lumi_leveling:
-    # ip1:
-    #   luminosity: 6.4e+27
-    #   num_colliding_bunches:
-    #   impose_separation_orthogonal_to_crossing: false
-    #   knobs:
-    #     - on_sep1
-    #   bump_range:
-    #     lhcb1:
-    #       - e.ds.l1.b1
-    #       - s.ds.r1.b1
-    #     lhcb2:
-    #       - s.ds.r1.b2
-    #       - e.ds.l1.b2
-    #   preserve_angles_at_ip: true
-    #   preserve_bump_closure: true
-    #   corrector_knob_names:
-    #     - corr_co_acbyvs4.l1b1
-    #     - corr_co_acbyhs4.l1b1
-    #     - corr_co_acbyvs4.r1b2
-    #     - corr_co_acbyhs4.r1b2
-    #     - corr_co_acbyhs4.r1b1
-    #     - corr_co_acbyvs4.r1b1
-    #     - corr_co_acbyhs4.l1b2
-    #     - corr_co_acbyvs4.l1b2
-    #     - corr_co_acbcv5.l1b1
-    #     - corr_co_acbch5.r1b1
-    #     - corr_co_acbcv5.r1b2
-    #     - corr_co_acbch5.l1b2
+    ip1:
+      luminosity: 6.4e+27
+      num_colliding_bunches:
+      impose_separation_orthogonal_to_crossing: false
+      knobs:
+      - on_sep1
+      bump_range:
+        lhcb1:
+        - e.ds.l1.b1
+        - s.ds.r1.b1
+        lhcb2:
+        - s.ds.r1.b2
+        - e.ds.l1.b2
+      preserve_angles_at_ip: true
+      preserve_bump_closure: true
+      corrector_knob_names:
+      - corr_co_acbyvs4.l1b1
+      - corr_co_acbyhs4.l1b1
+      - corr_co_acbyvs4.r1b2
+      - corr_co_acbyhs4.r1b2
+      - corr_co_acbyhs4.r1b1
+      - corr_co_acbyvs4.r1b1
+      - corr_co_acbyhs4.l1b2
+      - corr_co_acbyvs4.l1b2
+      - corr_co_acbcv5.l1b1
+      - corr_co_acbch5.r1b1
+      - corr_co_acbcv5.r1b2
+      - corr_co_acbch5.l1b2
 
-    # ip5:
-    #   luminosity: 6.4e+27
-    #   num_colliding_bunches:
-    #   impose_separation_orthogonal_to_crossing: false
-    #   knobs:
-    #     - on_sep5
-    #   bump_range:
-    #     lhcb1:
-    #       - e.ds.l5.b1
-    #       - s.ds.r5.b1
-    #     lhcb2:
-    #       - s.ds.r5.b2
-    #       - e.ds.l5.b2
-    #   preserve_angles_at_ip: true
-    #   preserve_bump_closure: true
-    #   corrector_knob_names:
-    #     - corr_co_acbcv5.l5b1
-    #     - corr_co_acbch5.r5b1
-    #     - corr_co_acbyhs4.l5b1
-    #     - corr_co_acbyhs4.r5b1
-    #     - corr_co_acbyvs4.l5b1
-    #     - corr_co_acbyvs4.r5b1
-    #     - corr_co_acbcv5.r5b2
-    #     - corr_co_acbch5.l5b2
-    #     - corr_co_acbyhs4.l5b2
-    #     - corr_co_acbyhs4.r5b2
-    #     - corr_co_acbyvs4.l5b2
-    #     - corr_co_acbyvs4.r5b2
+    ip5:
+      luminosity: 6.4e+27
+      num_colliding_bunches:
+      impose_separation_orthogonal_to_crossing: false
+      knobs:
+      - on_sep5
+      bump_range:
+        lhcb1:
+        - e.ds.l5.b1
+        - s.ds.r5.b1
+        lhcb2:
+        - s.ds.r5.b2
+        - e.ds.l5.b2
+      preserve_angles_at_ip: true
+      preserve_bump_closure: true
+      corrector_knob_names:
+      - corr_co_acbcv5.l5b1
+      - corr_co_acbch5.r5b1
+      - corr_co_acbyhs4.l5b1
+      - corr_co_acbyhs4.r5b1
+      - corr_co_acbyvs4.l5b1
+      - corr_co_acbyvs4.r5b1
+      - corr_co_acbcv5.r5b2
+      - corr_co_acbch5.l5b2
+      - corr_co_acbyhs4.l5b2
+      - corr_co_acbyhs4.r5b2
+      - corr_co_acbyvs4.l5b2
+      - corr_co_acbyvs4.r5b2
 
     ip2:
-      luminosity: 1.25e+28
-      num_colliding_bunches: 1088
+      luminosity: 6.4e+27
+      num_colliding_bunches:
       impose_separation_orthogonal_to_crossing: false
       knobs:
       - on_sep2h
@@ -192,10 +185,9 @@ config_collider:
       - corr_co_acbchs5.r2b1
       - corr_co_acbcvs5.r2b1
 
-      final_on_sep2: 0.0
     ip8:
-      luminosity: 1.0e+27
-      num_colliding_bunches: 398
+      luminosity: 1.4e+27
+      num_colliding_bunches:
       impose_separation_orthogonal_to_crossing: false
       knobs:
       - on_sep8v
@@ -225,15 +217,6 @@ config_collider:
       - corr_co_acbyhs5.r8b1
 
 # Configuration for the track job
-      final_on_sep8: 0.0
-    ip1:
-      luminosity: 1.25e+28
-      num_colliding_bunches: 1088
-      final_on_sep1: 0.0
-    ip5:
-      luminosity: 1.25e+28
-      num_colliding_bunches: 1088
-      final_on_sep5: 0.0
 config_simulation:
   # Collider file
   collider_file: ../collider/collider.json
