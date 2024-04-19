@@ -61,7 +61,6 @@ d_config_mad["optics_file"] = "acc-models-lhc/runIII/RunIII_dev/ION_2024/opticsf
 d_config_mad["ver_hllhc_optics"] = None
 d_config_mad["ver_lhc_run"] = 3.0
 
-
 # Beam energy (for both beams)
 beam_energy_tot = 6800 * 82
 d_config_mad["beam_config"]["lhcb1"]["beam_energy_tot"] = beam_energy_tot
@@ -147,14 +146,15 @@ d_config_beambeam = {"mask_with_filling_pattern": {}}
 
 # Beam settings
 d_config_beambeam["num_particles_per_bunch"] = 7e7
-d_config_beambeam["nemitt_x"] = 2e-6
-d_config_beambeam["nemitt_y"] = 2e-6
+d_config_beambeam["nemitt_x"] = 2.2e-6
+d_config_beambeam["nemitt_y"] = 2.2e-6
 
 # Filling scheme (in json format)
 # The scheme should consist of a json file containing two lists of booleans (one for each beam),
 # representing each bucket of the LHC.
-filling_scheme_path = os.path.abspath("master_jobs/filling_scheme/fill_ions_9310.json")
-
+filling_scheme_path = os.path.abspath(
+    "master_jobs/filling_scheme/50ns_1240b_1088_1088_398_56bpi_PbPb.json"
+)
 # Alternatively, one can get a fill directly from LPC from, e.g.:
 # https://lpc.web.cern.ch/cgi-bin/fillTable.py?year=2023
 # In this page, get the fill number of your fill of interest, and use it to replace the XXXX in the
@@ -368,7 +368,7 @@ set_context(children, 1, config)
 # --- Build tree and write it to the filesystem
 # ==================================================================================================
 # Define study name
-study_name = "MD2024"
+study_name = "ions_2024_collider"
 
 # Creade folder that will contain the tree
 if not os.path.exists("scans/" + study_name):

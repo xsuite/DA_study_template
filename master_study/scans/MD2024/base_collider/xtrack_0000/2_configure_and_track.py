@@ -1,6 +1,6 @@
 """This script is used to configure the collider and track the particles. Functions in this script
-are called sequentially, in the order in which they are defined. Modularity has been favored over 
-simple scripting for reproducibility, to allow rebuilding the collider from a different program 
+are called sequentially, in the order in which they are defined. Modularity has been favored over
+simple scripting for reproducibility, to allow rebuilding the collider from a different program
 (e.g. dahsboard)."""
 
 # ==================================================================================================
