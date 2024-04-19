@@ -137,7 +137,7 @@ d_config_leveling = {
 d_config_leveling["ip1"]["luminosity"] = 6.4e27
 d_config_leveling["ip2"]["luminosity"] = 6.4e27
 d_config_leveling["ip5"]["luminosity"] = 6.4e27
-d_config_leveling["ip8"]["luminosity"] = 1.4e27
+d_config_leveling["ip8"]["luminosity"] = 1.2e27
 
 ### Beam beam configuration
 
