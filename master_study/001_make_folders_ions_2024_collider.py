@@ -30,9 +30,9 @@ from user_defined_functions import (
 d_config_particles = {}
 
 # Radius of the initial particle distribution
-d_config_particles["r_min"] = 2
-d_config_particles["r_max"] = 10
-d_config_particles["n_r"] = 2 * 16 * (d_config_particles["r_max"] - d_config_particles["r_min"])
+d_config_particles["r_min"] = 4
+d_config_particles["r_max"] = 20
+d_config_particles["n_r"] = 8 * (d_config_particles["r_max"] - d_config_particles["r_min"])
 
 # Number of angles for the initial particle distribution
 d_config_particles["n_angles"] = 5
@@ -103,7 +103,7 @@ d_config_knobs = {}
 # Knobs at IPs
 d_config_knobs["on_x1"] = 170
 d_config_knobs["on_sep1"] = 1e-3
-d_config_knobs["on_x2v"] = 170
+d_config_knobs["on_x2v"] = -170
 d_config_knobs["on_sep2h"] = 1e-3
 d_config_knobs["on_sep2v"] = 0
 d_config_knobs["on_x5"] = 170
@@ -199,7 +199,7 @@ if check_bunch_number:
     if d_config_beambeam["mask_with_filling_pattern"]["i_bunch_b1"] is None:
         # Case the bunch number has not been provided
         worst_bunch_b1 = get_worst_bunch(
-            filling_scheme_path, numberOfLRToConsider=26, beam="beam_1"
+            filling_scheme_path, numberOfLRToConsider=10, beam="beam_1"
         )
         while d_config_beambeam["mask_with_filling_pattern"]["i_bunch_b1"] is None:
             bool_inp = input(
@@ -217,7 +217,7 @@ if check_bunch_number:
 
     if d_config_beambeam["mask_with_filling_pattern"]["i_bunch_b2"] is None:
         worst_bunch_b2 = get_worst_bunch(
-            filling_scheme_path, numberOfLRToConsider=26, beam="beam_2"
+            filling_scheme_path, numberOfLRToConsider=10, beam="beam_2"
         )
         # For beam 2, just select the worst bunch by default, as the tracking of b2 is not available yet anyway
         print(
