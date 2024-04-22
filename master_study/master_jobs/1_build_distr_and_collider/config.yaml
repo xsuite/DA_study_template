@@ -11,19 +11,19 @@ config_mad:
     acc-models-lhc: /afs/cern.ch/eng/lhc/optics
 
   # Optics file
-  optics_file: acc-models-lhc/runII/2018/ION/opticsfile.21
+  optics_file: acc-models-lhc/runIII/RunIII_dev/ION_2024/opticsfile.21
 
   # Beam parameters
   beam_config:
     lhcb1:
       # Lead ions
-      beam_energy_tot: 557600           # [GeV] corresponds to 6.8 Z TeV
-      particle_mass: 193.6872729        # [GeV]
+      beam_energy_tot: 557600 # [GeV] corresponds to 6.8 Z TeV
+      particle_mass: 193.6872729 # [GeV]
       particle_charge: 82
     lhcb2:
       # Lead ions
-      beam_energy_tot: 557600           # [GeV] corresponds to 6.8 Z TeV
-      particle_mass: 193.6872729        # [GeV]
+      beam_energy_tot: 557600 # [GeV] corresponds to 6.8 Z TeV
+      particle_mass: 193.6872729 # [GeV]
       particle_charge: 82
 
   # Enable machine imperfections

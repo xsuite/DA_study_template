@@ -30,9 +30,9 @@ from user_defined_functions import (
 d_config_particles = {}
 
 # Radius of the initial particle distribution
-d_config_particles["r_min"] = 2
-d_config_particles["r_max"] = 10
-d_config_particles["n_r"] = 2 * 16 * (d_config_particles["r_max"] - d_config_particles["r_min"])
+d_config_particles["r_min"] = 4
+d_config_particles["r_max"] = 20
+d_config_particles["n_r"] = 8 * (d_config_particles["r_max"] - d_config_particles["r_min"])
 
 # Number of angles for the initial particle distribution
 d_config_particles["n_angles"] = 5
@@ -57,13 +57,13 @@ d_config_mad = {"beam_config": {"lhcb1": {}, "lhcb2": {}}, "links": {}}
 
 ### For run III ions
 d_config_mad["links"]["acc-models-lhc"] = "/afs/cern.ch/eng/lhc/optics"
-d_config_mad["optics_file"] = "acc-models-lhc/runII/2018/ION/opticsfile.21"
+d_config_mad["optics_file"] = "acc-models-lhc/runIII/RunIII_dev/ION_2024/opticsfile.21"
 d_config_mad["ver_hllhc_optics"] = None
 d_config_mad["ver_lhc_run"] = 3.0
 
 
 # Beam energy (for both beams)
-beam_energy_tot = 6800*82
+beam_energy_tot = 6800 * 82
 d_config_mad["beam_config"]["lhcb1"]["beam_energy_tot"] = beam_energy_tot
 d_config_mad["beam_config"]["lhcb2"]["beam_energy_tot"] = beam_energy_tot
 
@@ -93,7 +93,7 @@ for beam in ["lhcb1", "lhcb2"]:
     d_config_tune_and_chroma["dqy"][beam] = 10.0
 
 # Value to be added to linear coupling knobs
-d_config_tune_and_chroma["delta_cmr"] = 0.0
+d_config_tune_and_chroma["delta_cmr"] = 0.001
 d_config_tune_and_chroma["delta_cmi"] = 0.0
 
 ### Knobs configuration
@@ -104,20 +104,22 @@ d_config_knobs = {}
 # Knobs at IPs
 d_config_knobs["on_x1"] = 170
 d_config_knobs["on_sep1"] = 1e-3
-d_config_knobs["on_x2"] = 170
-d_config_knobs["on_sep2"] = 1e-3
+d_config_knobs["on_x2v"] = -170
+d_config_knobs["on_sep2h"] = 1e-3
+d_config_knobs["on_sep2v"] = 0
 d_config_knobs["on_x5"] = 170
 d_config_knobs["on_sep5"] = 1e-3
-d_config_knobs["on_x8"] = -170
-d_config_knobs["on_sep8"] = 1e-8
+d_config_knobs["on_x8h"] = -170
+d_config_knobs["on_sep8v"] = 1e-10
+d_config_knobs["on_sep8h"] = 0
 d_config_knobs["on_disp"] = 1
 
-d_config_knobs["on_alice_normalized"] = -1
+d_config_knobs["on_alice_normalized"] = 1
 d_config_knobs["on_lhcb_normalized"] = -1
 
 # Octupoles
-d_config_knobs["i_oct_b1"] = 250.0
-d_config_knobs["i_oct_b2"] = 250.0
+d_config_knobs["i_oct_b1"] = 100.0
+d_config_knobs["i_oct_b2"] = 100.0
 
 ### leveling configuration
 
@@ -136,7 +138,7 @@ d_config_leveling = {
 d_config_leveling["ip1"]["luminosity"] = 6.4e27
 d_config_leveling["ip2"]["luminosity"] = 6.4e27
 d_config_leveling["ip5"]["luminosity"] = 6.4e27
-d_config_leveling["ip8"]["luminosity"] = 1.0e27
+d_config_leveling["ip8"]["luminosity"] = 1.4e27
 
 ### Beam beam configuration
 
@@ -144,17 +146,16 @@ d_config_leveling["ip8"]["luminosity"] = 1.0e27
 d_config_beambeam = {"mask_with_filling_pattern": {}}
 
 # Beam settings
-d_config_beambeam["num_particles_per_bunch"] = 180000000.0
-d_config_beambeam["nemitt_x"] = 1.65e-6
-d_config_beambeam["nemitt_y"] = 1.65e-6
+d_config_beambeam["num_particles_per_bunch"] = 1.8e8
+d_config_beambeam["nemitt_x"] = 2.2e-6
+d_config_beambeam["nemitt_y"] = 2.2e-6
 
 # Filling scheme (in json format)
 # The scheme should consist of a json file containing two lists of booleans (one for each beam),
 # representing each bucket of the LHC.
 filling_scheme_path = os.path.abspath(
-    "master_jobs/filling_scheme/50ns_961b_880_880_209_40bpi_25inj_PbPb.json"
+    "master_jobs/filling_scheme/50ns_1240b_1088_1088_398_56bpi_PbPb.json"
 )
-
 # Alternatively, one can get a fill directly from LPC from, e.g.:
 # https://lpc.web.cern.ch/cgi-bin/fillTable.py?year=2023
 # In this page, get the fill number of your fill of interest, and use it to replace the XXXX in the
@@ -180,9 +181,9 @@ else:
 
 
 # Add to config file
-d_config_beambeam["mask_with_filling_pattern"][
-    "pattern_fname"
-] = filling_scheme_path  # If None, a full fill is assumed
+d_config_beambeam["mask_with_filling_pattern"]["pattern_fname"] = (
+    filling_scheme_path  # If None, a full fill is assumed
+)
 
 # Initialize bunch number to None (will be set later)
 d_config_beambeam["mask_with_filling_pattern"]["i_bunch_b1"] = None
@@ -199,7 +200,7 @@ if check_bunch_number:
     if d_config_beambeam["mask_with_filling_pattern"]["i_bunch_b1"] is None:
         # Case the bunch number has not been provided
         worst_bunch_b1 = get_worst_bunch(
-            filling_scheme_path, numberOfLRToConsider=26, beam="beam_1"
+            filling_scheme_path, numberOfLRToConsider=10, beam="beam_1"
         )
         while d_config_beambeam["mask_with_filling_pattern"]["i_bunch_b1"] is None:
             bool_inp = input(
@@ -217,7 +218,7 @@ if check_bunch_number:
 
     if d_config_beambeam["mask_with_filling_pattern"]["i_bunch_b2"] is None:
         worst_bunch_b2 = get_worst_bunch(
-            filling_scheme_path, numberOfLRToConsider=26, beam="beam_2"
+            filling_scheme_path, numberOfLRToConsider=10, beam="beam_2"
         )
         # For beam 2, just select the worst bunch by default, as the tracking of b2 is not available yet anyway
         print(
