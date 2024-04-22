@@ -4,15 +4,15 @@ config_collider:
     knob_settings:
       # Orbit knobs
       on_x1: 170 # [urad]
-      on_sep1: 0 # [mm]
-      on_x2v: 170 # [urad]
+      on_sep1: 1e-3 # [mm]
+      on_x2v: -170 # [urad]
       on_sep2h: 1e-3 # [mm]
       on_sep2v: 0 # [mm]
       on_x5: 170 # [urad]
-      on_sep5: 0 # [mm]
+      on_sep5: 1e-3 # [mm]
       on_x8h: -170 # [urad]
       on_sep8h: 0 # [mm]
-      on_sep8v: 1e-8 # [mm]
+      on_sep8v: 1e-10 # [mm]
       on_ov2: 0 # [mm]
       on_ov5: 0 # [mm]
 
@@ -20,7 +20,7 @@ config_collider:
       on_disp: 1.000 # Value to choose could be optics-dependent
 
       # Magnets of the experiments
-      on_alice_normalized: -1
+      on_alice_normalized: 1
       on_lhcb_normalized: -1
       on_sol_atlas: 0
       on_sol_cms: 0
@@ -32,8 +32,8 @@ config_collider:
       lagrf400.b2: 0. # [rad]
 
       # Octupoles
-      i_oct_b1: 250. # [A]
-      i_oct_b2: 250. # [A]
+      i_oct_b1: 100. # [A]
+      i_oct_b2: 100. # [A]
 
     closed_orbit_correction:
       lhcb1: correction/corr_co_lhcb1.json
@@ -87,9 +87,9 @@ config_collider:
     nemitt_x: 1.65e-6
     nemitt_y: 1.65e-6
     mask_with_filling_pattern:
-      pattern_fname: ../filling_scheme/50ns_160b_160_80_73_40bpi_PbPb_BBMD.json
-      i_bunch_b1: 488 # If not specified, the bunch with the worst schedule is chosen
-      i_bunch_b2: 488 # Same. A value for i_bunch_b1 and i_bunch_b2 must be specified if pattern_fname is specified
+      pattern_fname: ../filling_scheme/50ns_1240b_1088_1088_398_56bpi_PbPb_converted.json
+      i_bunch_b1: 480 # If not specified, the bunch with the worst schedule is chosen
+      i_bunch_b2: 1363 # Same. A value for i_bunch_b1 and i_bunch_b2 must be specified if pattern_fname is specified
 
   skip_leveling: false
   config_lumi_leveling:
@@ -222,7 +222,7 @@ config_simulation:
   particle_file: ../1_build_distr_and_collider/particles/00.parquet
 
   # Initial off-momentum
-  delta_max: 27.e-5
+  delta_max: 0.00024
 
   # Tracking
   n_turns: 1000 # number of turns to track
