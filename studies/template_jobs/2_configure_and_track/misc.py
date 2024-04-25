@@ -1,6 +1,5 @@
 # Imports
 import json
-import logging
 
 import numpy as np
 import xtrack as xt
