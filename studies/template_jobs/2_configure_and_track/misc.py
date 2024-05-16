@@ -296,8 +296,8 @@ def generate_orbit_correction_setup():
                 end="s.ds.r1.b1",
                 vary=(
                     "corr_co_acbch6.l1b1",
-                    "corr_co_acbcv5.l1b1",
-                    "corr_co_acbch5.r1b1",
+                    "corr_co_acbyvs5.l1b1",
+                    "corr_co_acbyhs5.r1b1",
                     "corr_co_acbcv6.r1b1",
                     "corr_co_acbyhs4.l1b1",
                     "corr_co_acbyhs4.r1b1",
@@ -328,8 +328,8 @@ def generate_orbit_correction_setup():
                 end="s.ds.r5.b1",
                 vary=(
                     "corr_co_acbch6.l5b1",
-                    "corr_co_acbcv5.l5b1",
-                    "corr_co_acbch5.r5b1",
+                    "corr_co_acbyvs5.l5b1",
+                    "corr_co_acbyhs5.r5b1",
                     "corr_co_acbcv6.r5b1",
                     "corr_co_acbyhs4.l5b1",
                     "corr_co_acbyhs4.r5b1",
@@ -410,8 +410,8 @@ def generate_orbit_correction_setup():
                 end="e.ds.l1.b2",
                 vary=(
                     "corr_co_acbch6.r1b2",
-                    "corr_co_acbcv5.r1b2",
-                    "corr_co_acbch5.l1b2",
+                    "corr_co_acbyvs5.r1b2",
+                    "corr_co_acbyhs5.l1b2",
                     "corr_co_acbcv6.l1b2",
                     "corr_co_acbyhs4.l1b2",
                     "corr_co_acbyhs4.r1b2",
@@ -445,8 +445,8 @@ def generate_orbit_correction_setup():
                 end="e.ds.l5.b2",
                 vary=(
                     "corr_co_acbch6.r5b2",
-                    "corr_co_acbcv5.r5b2",
-                    "corr_co_acbch5.l5b2",
+                    "corr_co_acbyvs5.r5b2",
+                    "corr_co_acbyhs5.l5b2",
                     "corr_co_acbcv6.l5b2",
                     "corr_co_acbyhs4.l5b2",
                     "corr_co_acbyhs4.r5b2",

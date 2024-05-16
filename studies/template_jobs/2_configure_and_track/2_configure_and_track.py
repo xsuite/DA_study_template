@@ -134,6 +134,13 @@ def set_knobs(config_collider, collider):
     for kk, vv in conf_knobs_and_tuning["knob_settings"].items():
         collider.vars[kk] = vv
 
+    # Fix knobs for beam 2 crabs
+    if "on_crab5" in conf_knobs_and_tuning["knob_settings"]:
+        collider.vars["avcrab_r5b2"] = -collider.vars["avcrab_r5b2"]._get_value()
+        collider.vars["ahcrab_r5b2"] = -collider.vars["ahcrab_r5b2"]._get_value()
+        collider.vars["avcrab_l5b2"] = -collider.vars["avcrab_l5b2"]._get_value()
+        collider.vars["ahcrab_l5b2"] = -collider.vars["ahcrab_l5b2"]._get_value()
+
     return collider, conf_knobs_and_tuning
 
 
@@ -345,7 +352,7 @@ def add_linear_coupling(conf_knobs_and_tuning, collider, config_mad):
     if version_run == 3.0:
         collider.vars["cmrs.b1_sq"] += conf_knobs_and_tuning["delta_cmr"]
         collider.vars["cmrs.b2_sq"] += conf_knobs_and_tuning["delta_cmr"]
-    elif version_hllhc in [1.6, 1.5]:
+    elif version_hllhc in [1.6, 1.5, 1.3]:
         collider.vars["c_minus_re_b1"] += conf_knobs_and_tuning["delta_cmr"]
         collider.vars["c_minus_re_b2"] += conf_knobs_and_tuning["delta_cmr"]
     else:
