@@ -1,7 +1,6 @@
 # Imports
 import json
 import os
-
 import numpy as np
 import xtrack as xt
 from scipy.constants import c as clight
