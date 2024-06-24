@@ -582,7 +582,7 @@ def luminosity_leveling(
     return collider
 
 
-def compute_PU(luminosity, num_colliding_bunches, T_rev0, cross_section=281e-24):
+def compute_PU(luminosity, num_colliding_bunches, T_rev0, cross_section=81e-27):
     return luminosity / num_colliding_bunches * cross_section * T_rev0
 
 
