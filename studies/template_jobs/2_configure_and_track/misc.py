@@ -480,7 +480,6 @@ def generate_orbit_correction_setup():
         },
     }
 
-
 def compute_PU(luminosity, num_colliding_bunches, T_rev0, cross_section=81e-27):
     return luminosity / num_colliding_bunches * cross_section * T_rev0
 
