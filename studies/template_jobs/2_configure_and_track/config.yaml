@@ -24,8 +24,8 @@ config_collider:
       on_disp: 1 # Value to choose could be optics-dependent
 
       # Crab cavities
-      on_crab1: -190 # [urad]
-      on_crab5: -190 # [urad]
+      on_crab1: 0 # [urad]
+      on_crab5: 0 # [urad]
 
       # Magnets of the experiments
       on_alice_normalized: 1
