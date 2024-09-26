@@ -125,7 +125,7 @@ def build_collider_from_mad(config_mad, sanity_checks=True):
     if sanity_checks:
         mad_b4.use(sequence="lhcb2")
         mad_b4.twiss()
-        ost.check_madx_lattices(mad_b1b2)
+        ost.check_madx_lattices(mad_b4)
 
     # Build xsuite collider
     collider = xlhc.build_xsuite_collider(
